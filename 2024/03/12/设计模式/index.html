@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="移动零, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="设计模式, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>移动零 | Kendrick_W&#39;s Blog</title>
+    <title>设计模式 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/17.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">移动零</h1>
+                    <h1 class="description center-align post-title">设计模式</h1>
                 </div>
             </div>
         </div>
@@ -429,12 +429,25 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/KendricW.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                                <span class="chip bg-color">设计模式</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/KendricW.github.io/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-category">
+                                基础知识
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -457,14 +470,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    206
+                    3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    10 Min
                 </div>
                 
 
@@ -484,16 +497,223 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="移动零（简单）"><a href="#移动零（简单）" class="headerlink" title="移动零（简单）"></a>移动零（简单）</h1><p>[toc]</p>
-<p>给定一个数组 <code>nums</code>，编写一个函数将所有 <code>0</code> 移动到数组的末尾，同时保持非零元素的相对顺序。</p>
-<p>请注意 ，必须在不复制数组的情况下原地对数组进行操作。</p>
-<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例 1:"></a><strong>示例 1:</strong></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: nums = [0,1,0,3,12]</span><br><span class="line">输出: [1,3,12,0,0]</span><br></pre></td></tr></table></figure>
-
-<h2 id="示例-2"><a href="#示例-2" class="headerlink" title="示例 2:"></a><strong>示例 2:</strong></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: nums = [0]</span><br><span class="line">输出: [0]</span><br></pre></td></tr></table></figure>
-
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a><strong>题解</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> class 移动零 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">moveZeroes</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="comment">//如果数组是空的直接返回，不浪费时间</span></span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//记录非零的数目</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//第一次遍历的时候，只要是非0的统统都赋给nums[j]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i] != <span class="number">0</span>)&#123;</span><br><span class="line">                nums[j++] = nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将后面的数补0</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> j; i &lt; nums.length; i++) &#123;</span><br><span class="line">            nums[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://big-event-wzx.oss-cn-beijing.aliyuncs.com/image-20240312002556724.png" alt="成果"></p>
+                <h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><h2 id="设计模式的类型"><a href="#设计模式的类型" class="headerlink" title="设计模式的类型"></a>设计模式的类型</h2><p>除GOF23种外的设计模式<br>    * 简单工厂模式<br>        * 由一个工厂决定创建哪一种产品类型的实例</p>
+<ul>
+<li><p>创建型模式</p>
+<ul>
+<li>隐藏了创建对象的过程,通过逻辑方法进行创建对象,而不是通过new关键字进行创建<ul>
+<li>工厂方法模式<ul>
+<li>定义一个接口或一个抽象的工厂类,让它实现类(工厂)来决定创建哪一个实例对象</li>
+<li>根据每个工厂不同的方法,来产生不同的所需要的对象</li>
+<li>工厂方法模式生产的都是相同系列的对象,比如Java课程,Python课程</li>
+</ul>
+</li>
+<li>抽象工厂模式<ul>
+<li>抽象工厂模式提供了创建一系列相关或互相依赖对象的接口</li>
+<li>类似公司下的产品,生产,生产汽车,将汽车分为各个零部件进行生产,车架,车门,底盘.</li>
+</ul>
+</li>
+<li>建造者模式<ul>
+<li>将复杂的对象的创建和属性赋值所分离</li>
+<li>监造的过程和细节我们不需要知道,只需要通过构建者去进行操作即可</li>
+</ul>
+</li>
+<li>原型模式<ul>
+<li>用于创建重复的对象,能够保证创建对象的性能.</li>
+<li>原型设计模式是创建对象的最佳方式</li>
+</ul>
+</li>
+<li>单例模式<ul>
+<li>在程序中想要保持一个实力对象的,就是用单例设计模式</li>
+<li>减少内存开销<ul>
+<li>懒汉式<ul>
+<li>在需要使用对象的时候,才会创建</li>
+</ul>
+</li>
+<li>双重检查<ul>
+<li>通过两个if判断,加上同步锁进行实现</li>
+</ul>
+</li>
+<li>静态内部类<ul>
+<li>在单例类中,通过私有的静态内部类,创建单例对象</li>
+</ul>
+</li>
+<li>饿汉式<ul>
+<li>在调用时,就会创建单例对象,通过静态代码块或静态变量直接初始化</li>
+</ul>
+</li>
+<li>枚举<ul>
+<li>枚举的方式实现单例模式,是最佳的实现方式</li>
+<li>它可以有效防止对单例模式的破坏<ul>
+<li>序列化和反序列的方式破坏单例模式<ul>
+<li>通过流将单例对象,序列化到文件中,然后再反序列化读取出来</li>
+<li>最终通过反序列化的方式创建出一个对象</li>
+<li>发现两个对象的内存地址完全不一致,从而破坏了单例设计模式解构</li>
+<li>在单例类中,写一个方法名称必须为readResolve<ul>
+<li>因为在反序列化创建对象时,是通过反射创建的</li>
+<li>反射会调用我们自己的readResolve,方法</li>
+<li>如果重写了,就代表返回自己的单例对象</li>
+<li>如果没有重写,会通过反射的方式创建一个新的对象,从而破坏了单例设计模式  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Object <span class="title function_">readResolve</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> doubleCheckSingleton;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>通过反射的方式破坏单例模式<ul>
+<li>通过字节码对象,创建构造器对象</li>
+<li>通过构造器对象,初始化单例对象<ul>
+<li>由于单例对象的构造方法是私有化的</li>
+<li>调用构造器中的方法,赋予权限,创建单例对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>结构型模式</p>
+<ul>
+<li>主要关注类和对象的组合关系</li>
+<li>继承的概念被用来组合接口和定义组合对象,获得新的功能方式<ul>
+<li>外观模式<ul>
+<li>提供了一个统一的接口,用来访问子系统中的一群接口</li>
+<li>定义了一个高层接口,让子系统使用更加容易</li>
+</ul>
+</li>
+<li>适配器模式<ul>
+<li>适配器模式（Adapter Pattern）是作为两个不兼容的接口之间的桥梁,将一个类的接口转换成客户希望的另外一个接口</li>
+<li>适配器模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作</li>
+<li>这种类型的设计模式属于结构型模式，它结合了两个独立接口的功能</li>
+</ul>
+</li>
+<li>桥接模式<ul>
+<li>桥接（Bridge）是用于把抽象化与实现化解耦，使得二者可以独立变化。</li>
+<li>这种类型的设计模式属于结构型模式，它通过提供抽象化和实现化之间的桥接结构，来实现二者的解耦。</li>
+<li>这种模式涉及到一个作为桥接的接口，使得实体类的功能独立于接口实现类。这两种类型的类可被结构化改变而互不影响。</li>
+</ul>
+</li>
+<li>组合模式<ul>
+<li>组合模式（Composite Pattern），又叫部分整体模式，是用于把一组相似的对象当作一个单一的对象。</li>
+<li>组合模式依据树形结构来组合对象，用来表示部分以及整体层次。</li>
+<li>这种类型的设计模式属于结构型模式，它创建了对象组的树形结构。</li>
+<li>这种模式创建了一个包含自己对象组的类。该类提供了修改相同对象组的方式。</li>
+<li>我们通过下面的实例来演示组合模式的用法。实例演示了一个组织中员工的层次结构。</li>
+</ul>
+</li>
+<li>代理模式<ul>
+<li>为对象提供一种代理，以控制这个对象的访问操作</li>
+<li>代理对象和目标对象之间起到中介的作用</li>
+<li>保护目标对象和增强目标对象</li>
+<li>代理模式能将代理对象与真实被调用的目标对象分离</li>
+<li>一定程度上降低了系统的耦合度，扩展性好</li>
+</ul>
+</li>
+<li>装饰模式<ul>
+<li>在原有对象不做改变的基础上，将对象的功能附加上</li>
+<li>提供了比继承更有弹性的替代方案(扩展原有对象功能)</li>
+<li>扩展一个类的功能或给一个类添加附加职责(业务逻辑)</li>
+<li>动态的给一个对象添加功能，这些功能可以再动态的撤销</li>
+<li>继承的有力补充，比继承灵活，不改变原有对象的情况下给一个对象扩展功能</li>
+<li>通过使用不同装饰类以及这些装饰类的排列组合，可以实现不同效果</li>
+</ul>
+</li>
+<li>享元模式<ul>
+<li>提供了减少对象数量从而改善应用所需的对象结构的方式</li>
+<li>运用共享技术有效地支持大量细粒度的对象</li>
+<li>总结：减少创建对象的数量，从而减少内存的占用，提升性能</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>行为型模式</p>
+<ul>
+<li>主要关注对象之间的通信<ul>
+<li>模板方法模式<ul>
+<li>定义了一个算法的架构，并允许子类为一个或多个步骤的实现</li>
+<li>模板方法在子类不改变算法结构的情况下，重新定义算法的某些步骤</li>
+<li>实现一个算法的不变的部分，并将可变的空间留给子类来完成</li>
+<li>子类中公共的行为抽取出来并封装到一个公共父类中，避免代码重复</li>
+</ul>
+</li>
+<li>迭代器模式<ul>
+<li>提供方法，顺序访问集合对象中的各个元素，而又不暴露对象的内部表示</li>
+<li>为遍历不同的集合结构提供统一的接口,分离了集合对象的遍历行为</li>
+</ul>
+</li>
+<li>策略模式<ul>
+<li>定义了算法，分别封装起来，它们之间可以相互替换，让算法的变化不会影响到使用算法的用户</li>
+<li>如果有大量的if…else…else if…可以通过策略模式进行替换</li>
+<li>避免使用多重条件转语句，if…else if…else</li>
+<li>提高算法的保密性和安全性</li>
+</ul>
+</li>
+<li>解释器模式<ul>
+<li>通过给定的语言，定义它的语法和行为，并定义解释器，这个解释器使用来解释语言中的句子</li>
+<li>为了解释一种语言，而为语言创建的解释器<ul>
+<li>某个类型问题触发频次足够高,比如处理日志和不同日志格式</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>观察者模式<ul>
+<li>当对象间存在一对多关系时，则使用观察者模式（Observer Pattern）</li>
+<li>比如，当一个对象被修改时，则会自动通知依赖它的对象。</li>
+<li>让多个观察者对象同时监听某一个主题对象，当主题对象发生变化时，它的所有依赖者(观察者)都会收到通知并更新</li>
+</ul>
+</li>
+<li>备忘录模式<ul>
+<li>在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态。</li>
+<li>所谓备忘录模式就是在不破坏封装的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态，这样可以在以后将对象恢复到原先保存的状态。</li>
+<li>很多时候我们总是需要记录一个对象的内部状态，这样做的目的就是为了允许用户取消不确定或者错误的操作，能够恢复到他原先的状态，使得他有”后悔药”可吃。</li>
+</ul>
+</li>
+<li>命令模式<ul>
+<li>将一个请求封装成一个对象，从而使您可以用不同的请求对客户进行参数化。解决了应用程序中对象的职责以及它们之间的通信方式</li>
+<li>在软件系统中，行为请求者与行为实现者通常是一种紧耦合的关系，但某些场合，比如需要对行为进行记录、撤销或重做、事务等处理时，这种无法抵御变化的紧耦合的设计就不太合适。</li>
+<li>请求调用者和行为实现者需要解耦，使得调用者和行为实现者不直接交互</li>
+</ul>
+</li>
+<li>中介者模式<ul>
+<li>中介者模式（Mediator Pattern）是用来降低多个对象和类之间的通信复杂性。这种模式提供了一个中介类，该类通常处理不同类之间的通信，并支持松耦合，使代码易于维护。</li>
+<li>用一个中介对象来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。</li>
+<li>对象与对象之间存在大量的关联关系，这样势必会导致系统的结构变得很复杂，同时若一个对象发生改变，我们也需要跟踪与之相关联的对象，同时做出相应的处理。</li>
+</ul>
+</li>
+<li>责任链模式<ul>
+<li>为请求创建了一个接收者对象的链。对请求的发送者和接收者进行解耦。</li>
+<li>在这种模式中，通常每个接收者都包含对另一个接收者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者，依此类推。</li>
+<li>避免请求发送者与接收者耦合在一起，让多个对象都有可能接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止。</li>
+<li>职责链上的处理者负责处理请求，客户只需要将请求发送到职责链上即可，无须关心请求的处理细节和请求的传递，所以职责链将请求的发送者和请求的处理者解耦了。</li>
+</ul>
+</li>
+<li>访问者模式<ul>
+<li>使用一个访问者类，它改变了元素类的执行算法。</li>
+<li>通过这种方式，元素的执行算法可以随着访问者改变而改变。这种类型的设计模式属于行为型模式。</li>
+<li>根据模式，元素对象已接受访问者对象，这样访问者对象就可以处理元素对象上的操作。</li>
+<li>主要将数据结构与数据操作分离。稳定的数据结构和易变的操作耦合问题。</li>
+</ul>
+</li>
+<li>状态模式<ul>
+<li>在状态模式（State Pattern）中，类的行为是基于它的状态改变的。</li>
+<li>允许对象在内部状态发生改变时改变它的行为，对象看起来好像修改了它的类。</li>
+<li>对象的行为依赖于它的状态（属性），并且可以根据它的状态改变而改变它的相关行为。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
                 
             </div>
@@ -520,7 +740,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E7%AE%97%E6%B3%95-%E7%A7%BB%E5%8A%A8%E9%9B%B6/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E7%AE%97%E6%B3%95-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -557,7 +777,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/KendricW.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                                    <span class="chip bg-color">设计模式</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -599,9 +823,60 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/KendricW.github.io/2024/03/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/KendricW.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="设计模式">
+                        
+                        <span class="card-title">设计模式</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-category">
+                                    基础知识
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                        <span class="chip bg-color">设计模式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/KendricW.github.io/2024/03/12/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/">
                     <div class="card-image">
@@ -619,9 +894,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-12
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -641,43 +916,6 @@
                         <span class="chip bg-color">算法</span>
                     </a>
                     
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                Next&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/KendricW.github.io/2024/03/10/hello-world/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/KendricW.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
-                        
-                        <span class="card-title">Hello World</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-10
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            Kendrick_W
-                            
-                        </span>
-                    </div>
                 </div>
                 
             </div>
