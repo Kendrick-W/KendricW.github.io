@@ -531,7 +531,6 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">sign</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 1.获取当前登录用户</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    <span class="comment">// 2.获取日期</span></span><br><span class="line">    <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line">    <span class="comment">// 3.拼接key</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">keySuffix</span> <span class="operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="string">&quot;:yyyyMM&quot;</span>));</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> USER_SIGN_KEY + userId + keySuffix;</span><br><span class="line">    <span class="comment">// 4.获取今天是本月的第几天</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dayOfMonth</span> <span class="operator">=</span> now.getDayOfMonth();</span><br><span class="line">    <span class="comment">// 5.写入Redis SETBIT key offset 1</span></span><br><span class="line">    stringRedisTemplate.opsForValue().setBit(key, dayOfMonth - <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> Result.ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="11-3-用户签到-签到统计"><a href="#11-3-用户签到-签到统计" class="headerlink" title="11.3 用户签到-签到统计"></a>11.3 用户签到-签到统计</h4><p><strong>问题1：</strong>什么叫做连续签到天数？<br>从最后一次签到开始向前统计，直到遇到第一次未签到为止，计算总的签到次数，就是连续签到天数。</p>
-<p><img src="D:/BaiduNetdiskDownload/Redis分布式事务/讲义/Redis实战篇.assets/1653834455899.png" alt="1653834455899"></p>
 <p>Java逻辑代码：获得当前这个月的最后一次签到数据，定义一个计数器，然后不停的向前统计，直到获得第一个非0的数字即可，每得到一个非0的数字计数器+1，直到遍历完所有的数据，就可以获得当前月的签到总天数了</p>
 <p><strong>问题2：</strong>如何得到本月到今天为止的所有签到数据？</p>
 <p>  BITFIELD key GET u[dayOfMonth] 0</p>
@@ -753,12 +752,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/java/">
-                        <span class="chip bg-color">java</span>
-                    </a>
-                    
                     <a href="/KendricW.github.io/tags/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4/">
                         <span class="chip bg-color">批量删除</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/java/">
+                        <span class="chip bg-color">java</span>
                     </a>
                     
                 </div>
