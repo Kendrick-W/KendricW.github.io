@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="批量删除, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="签到及连续签到统计, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>批量删除 | Kendrick_W&#39;s Blog</title>
+    <title>签到及连续签到统计 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">批量删除</h1>
+                    <h1 class="description center-align post-title">签到及连续签到统计</h1>
                 </div>
             </div>
         </div>
@@ -431,12 +431,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/KendricW.github.io/tags/java/">
-                                <span class="chip bg-color">java</span>
+                            <a href="/KendricW.github.io/tags/Redis/">
+                                <span class="chip bg-color">Redis</span>
                             </a>
                         
-                            <a href="/KendricW.github.io/tags/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4/">
-                                <span class="chip bg-color">批量删除</span>
+                            <a href="/KendricW.github.io/tags/%E7%AD%BE%E5%88%B0/">
+                                <span class="chip bg-color">签到</span>
                             </a>
                         
                     </div>
@@ -447,8 +447,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
-                                开发思路
+                            <a href="/KendricW.github.io/categories/Redis/" class="post-category">
+                                Redis
                             </a>
                         
                     </div>
@@ -474,14 +474,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    188
+                    1.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    5 Min
                 </div>
                 
 
@@ -501,16 +501,53 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="Mapper层"><a href="#Mapper层" class="headerlink" title="Mapper层"></a>Mapper层</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SetmealDishMapper</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据菜品id查询对应的套餐id</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dishIds</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">//select setmeal_id from setmeal_dish where dish_id in (1,2,3,4)</span></span><br><span class="line">    List&lt;Long&gt; <span class="title function_">getSetmealIdsByDishIds</span><span class="params">(List&lt;Long&gt; dishIds)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                <h2 id="用户签到"><a href="#用户签到" class="headerlink" title="用户签到"></a>用户签到</h2><h4 id="用户签到-BitMap功能演示"><a href="#用户签到-BitMap功能演示" class="headerlink" title="用户签到-BitMap功能演示"></a>用户签到-BitMap功能演示</h4><p>我们针对签到功能完全可以通过mysql来完成</p>
+<p>用户一次签到，就是一条记录，假如有1000万用户，平均每人每年签到次数为10次，则这张表一年的数据量为 1亿条</p>
+<p>每签到一次需要使用（8 + 8 + 1 + 1 + 3 + 1）共22 字节的内存，一个月则最多需要600多字节</p>
+<p>我们如何能够简化一点呢？其实可以考虑小时候一个挺常见的方案，就是小时候，咱们准备一张小小的卡片，你只要签到就打上一个勾，我最后判断你是否签到，其实只需要到小卡片上看一看就知道了</p>
+<p>我们可以采用类似这样的方案来实现我们的签到需求。</p>
+<p>我们按月来统计用户签到信息，签到记录为1，未签到则记录为0.</p>
+<p>把每一个bit位对应当月的每一天，形成了映射关系。用0和1标示业务状态，这种思路就称为位图（BitMap）。这样我们就用极小的空间，来实现了大量数据的表示</p>
+<p>Redis中是利用string类型数据结构实现BitMap，因此最大上限是512M，转换为bit则是 2^32个bit位。</p>
+<p><em><strong>BitMap的操作命令有：</strong></em></p>
+<ul>
+<li><em><strong>SETBIT：向指定位置（offset）存入一个0或1</strong></em></li>
+<li><em><strong>GETBIT ：获取指定位置（offset）的bit值</strong></em></li>
+<li><em><strong>BITCOUNT ：统计BitMap中值为1的bit位的数量</strong></em></li>
+<li><em><strong>BITFIELD ：操作（查询、修改、自增）BitMap中bit数组中的指定位置（offset）的值</strong></em></li>
+<li><em><strong>BITFIELD_RO ：获取BitMap中bit数组，并以十进制形式返回</strong></em></li>
+<li><em><strong>BITOP ：将多个BitMap的结果做位运算（与 、或、异或）</strong></em></li>
+<li><em><strong>BITPOS ：查找bit数组中指定范围内第一个0或1出现的位置</strong></em></li>
+<li></li>
+</ul>
+<h4 id="11-2-、用户签到-实现签到功能"><a href="#11-2-、用户签到-实现签到功能" class="headerlink" title="11.2 、用户签到-实现签到功能"></a>11.2 、用户签到-实现签到功能</h4><p>需求：实现签到接口，将当前用户当天签到信息保存到Redis中</p>
+<p>思路：我们可以把年和月作为bitMap的key，然后保存到一个bitMap中，每次签到就到对应的位上把数字从0变成1，只要对应是1，就表明说明这一天已经签到了，反之则没有签到。</p>
+<p>我们通过接口文档发现，此接口并没有传递任何的参数，没有参数怎么确实是哪一天签到呢？这个很容易，可以通过后台代码直接获取即可，然后到对应的地址上去修改bitMap。</p>
+<p><strong>代码</strong></p>
+<p>UserController</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/sign&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">sign</span><span class="params">()</span>&#123;</span><br><span class="line">   <span class="keyword">return</span> userService.sign();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.sky.mapper.SetmealDishMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getSetmealIdsByDishIds&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;java.lang.Long&quot;</span>&gt;</span></span><br><span class="line">        select setmeal_id from setmeal_dish where dish_id in</span><br><span class="line">        <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;dishIds&quot;</span> <span class="attr">item</span>=<span class="string">&quot;dishId&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span> <span class="attr">open</span>=<span class="string">&quot;(&quot;</span> <span class="attr">close</span>=<span class="string">&quot;)&quot;</span>&gt;</span></span><br><span class="line">            #&#123;dishId&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>UserServiceImpl</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">sign</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 1.获取当前登录用户</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    <span class="comment">// 2.获取日期</span></span><br><span class="line">    <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line">    <span class="comment">// 3.拼接key</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">keySuffix</span> <span class="operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="string">&quot;:yyyyMM&quot;</span>));</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> USER_SIGN_KEY + userId + keySuffix;</span><br><span class="line">    <span class="comment">// 4.获取今天是本月的第几天</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dayOfMonth</span> <span class="operator">=</span> now.getDayOfMonth();</span><br><span class="line">    <span class="comment">// 5.写入Redis SETBIT key offset 1</span></span><br><span class="line">    stringRedisTemplate.opsForValue().setBit(key, dayOfMonth - <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> Result.ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>collection</code>: Mapper层传入的集合参数</p>
-<p><code>item</code>: 当前遍历集合的元素</p>
-<p><code>separator</code>: 每个元素之间的分隔符</p>
-<p><code>open=&quot;(&quot;</code> : 左侧拼接(</p>
-<p><code>close=&quot;)&quot;</code>: 右侧拼接)</p>
+<h4 id="11-3-用户签到-签到统计"><a href="#11-3-用户签到-签到统计" class="headerlink" title="11.3 用户签到-签到统计"></a>11.3 用户签到-签到统计</h4><p><strong>问题1：</strong>什么叫做连续签到天数？<br>从最后一次签到开始向前统计，直到遇到第一次未签到为止，计算总的签到次数，就是连续签到天数。</p>
+<p><img src="D:/BaiduNetdiskDownload/Redis分布式事务/讲义/Redis实战篇.assets/1653834455899.png" alt="1653834455899"></p>
+<p>Java逻辑代码：获得当前这个月的最后一次签到数据，定义一个计数器，然后不停的向前统计，直到获得第一个非0的数字即可，每得到一个非0的数字计数器+1，直到遍历完所有的数据，就可以获得当前月的签到总天数了</p>
+<p><strong>问题2：</strong>如何得到本月到今天为止的所有签到数据？</p>
+<p>  BITFIELD key GET u[dayOfMonth] 0</p>
+<p>假设今天是10号，那么我们就可以从当前月的第一天开始，获得到当前这一天的位数，是10号，那么就是10位，去拿这段时间的数据，就能拿到所有的数据了，那么这10天里边签到了多少次呢？统计有多少个1即可。</p>
+<p><strong>问题3：如何从后向前遍历每个bit位？</strong></p>
+<p>注意：bitMap返回的数据是10进制，哪假如说返回一个数字8，那么我哪儿知道到底哪些是0，哪些是1呢？我们只需要让得到的10进制数字和1做与运算就可以了，因为1只有遇见1 才是1，其他数字都是0 ，我们把签到结果和1进行与操作，每与一次，就把签到结果向右移动一位，依次内推，我们就能完成逐个遍历的效果了。</p>
+<p>需求：实现下面接口，统计当前用户截止当前时间在本月的连续签到天数</p>
+<p>有用户有时间我们就可以组织出对应的key，此时就能找到这个用户截止这天的所有签到记录，再根据这套算法，就能统计出来他连续签到的次数了</p>
+<p>代码</p>
+<p><strong>UserController</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/sign/count&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">signCount</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> userService.signCount();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><strong>UserServiceImpl</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">signCount</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 1.获取当前登录用户</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    <span class="comment">// 2.获取日期</span></span><br><span class="line">    <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line">    <span class="comment">// 3.拼接key</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">keySuffix</span> <span class="operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="string">&quot;:yyyyMM&quot;</span>));</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> USER_SIGN_KEY + userId + keySuffix;</span><br><span class="line">    <span class="comment">// 4.获取今天是本月的第几天</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dayOfMonth</span> <span class="operator">=</span> now.getDayOfMonth();</span><br><span class="line">    <span class="comment">// 5.获取本月截止今天为止的所有的签到记录，返回的是一个十进制的数字 BITFIELD sign:5:202203 GET u14 0</span></span><br><span class="line">    List&lt;Long&gt; result = stringRedisTemplate.opsForValue().bitField(</span><br><span class="line">            key,</span><br><span class="line">            BitFieldSubCommands.create()</span><br><span class="line">                    .get(BitFieldSubCommands.BitFieldType.unsigned(dayOfMonth)).valueAt(<span class="number">0</span>)</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="literal">null</span> || result.isEmpty()) &#123;</span><br><span class="line">        <span class="comment">// 没有任何签到结果</span></span><br><span class="line">        <span class="keyword">return</span> Result.ok(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Long</span> <span class="variable">num</span> <span class="operator">=</span> result.get(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (num == <span class="literal">null</span> || num == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> Result.ok(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 6.循环遍历</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 6.1.让这个数字与1做与运算，得到数字的最后一个bit位  // 判断这个bit位是否为0</span></span><br><span class="line">        <span class="keyword">if</span> ((num &amp; <span class="number">1</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果为0，说明未签到，结束</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果不为0，说明已签到，计数器+1</span></span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 把数字右移一位，抛弃最后一个bit位，继续下一个bit位</span></span><br><span class="line">        num &gt;&gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> Result.ok(count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4>
                 
             </div>
             <hr/>
@@ -536,7 +573,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/16/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4xmlsql/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/16/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4xmlsql/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/16/%E7%AD%BE%E5%88%B0%E5%8F%8A%E8%BF%9E%E7%BB%AD%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/16/%E7%AD%BE%E5%88%B0%E5%8F%8A%E8%BF%9E%E7%BB%AD%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -574,12 +611,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/KendricW.github.io/tags/java/">
-                                    <span class="chip bg-color">java</span>
+                                <a href="/KendricW.github.io/tags/Redis/">
+                                    <span class="chip bg-color">Redis</span>
                                 </a>
                             
-                                <a href="/KendricW.github.io/tags/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4/">
-                                    <span class="chip bg-color">批量删除</span>
+                                <a href="/KendricW.github.io/tags/%E7%AD%BE%E5%88%B0/">
+                                    <span class="chip bg-color">签到</span>
                                 </a>
                             
                         </div>
@@ -623,9 +660,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
                 <a href="/KendricW.github.io/2024/03/16/%E7%AD%BE%E5%88%B0%E5%8F%8A%E8%BF%9E%E7%BB%AD%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1/">
                     <div class="card-image">
@@ -634,59 +672,6 @@
                         <img src="/KendricW.github.io/medias/featureimages/13.jpg" class="responsive-img" alt="签到及连续签到统计">
                         
                         <span class="card-title">签到及连续签到统计</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-16
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/KendricW.github.io/categories/Redis/" class="post-category">
-                                    Redis
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/KendricW.github.io/tags/Redis/">
-                        <span class="chip bg-color">Redis</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%AD%BE%E5%88%B0/">
-                        <span class="chip bg-color">签到</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                Next&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/KendricW.github.io/2024/03/16/Redis%E5%9F%BA%E7%A1%80/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/KendricW.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="Redis入门">
-                        
-                        <span class="card-title">Redis入门</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -711,11 +696,69 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
                     <a href="/KendricW.github.io/tags/Redis/">
                         <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E7%AD%BE%E5%88%B0/">
+                        <span class="chip bg-color">签到</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/KendricW.github.io/2024/03/16/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4xmlsql/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/KendricW.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="批量删除">
+                        
+                        <span class="card-title">批量删除</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-16
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/java/">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4/">
+                        <span class="chip bg-color">批量删除</span>
                     </a>
                     
                 </div>
