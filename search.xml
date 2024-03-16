@@ -13,7 +13,7 @@
       
       <categories>
           
-          <category> Redis </category>
+          <category> 开发思路 </category>
           
       </categories>
       
@@ -47,9 +47,9 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> 批量删除 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
@@ -99,11 +99,11 @@
       
         <tags>
             
+            <tag> java </tag>
+            
             <tag> 登录 </tag>
             
             <tag> 校验 </tag>
-            
-            <tag> java </tag>
             
         </tags>
       
