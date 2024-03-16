@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Swagger</title>
+      <link href="/KendricW.github.io/2024/03/17/swagger/"/>
+      <url>/KendricW.github.io/2024/03/17/swagger/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a>Swagger</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务(<a href="https://swagger.io/">https://swagger.io/</a>)。 它的主要作用是：</p><ol><li><p>使得前后端分离开发更加方便，有利于团队协作</p></li><li><p>接口的文档在线自动生成，降低后端开发人员编写接口文档的负担</p></li><li><p>功能测试 </p><p>Spring已经将Swagger纳入自身的标准，建立了Spring-swagger项目，现在叫Springfox。通过在项目中引入Springfox ，即可非常简单快捷的使用Swagger。</p></li></ol><p>knife4j是为Java MVC框架集成Swagger生成Api文档的增强解决方案,前身是swagger-bootstrap-ui,取名kni4j是希望它能像一把匕首一样小巧,轻量,并且功能强悍!</p><p>目前，一般都使用knife4j框架。</p><h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><ol><li><h3 id="导入-knife4j-的maven坐标"><a href="#导入-knife4j-的maven坐标" class="headerlink" title="导入 knife4j 的maven坐标"></a>导入 knife4j 的maven坐标</h3><p>在pom.xml中添加依赖</p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.xiaoymin<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>knife4j-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li><li><h3 id="在配置类中加入-knife4j-相关配置"><a href="#在配置类中加入-knife4j-相关配置" class="headerlink" title="在配置类中加入 knife4j 相关配置"></a>在配置类中加入 knife4j 相关配置</h3><p>WebMvcConfiguration.java</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过knife4j生成接口文档</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">docket</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ApiInfo</span> <span class="variable">apiInfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">                .title(<span class="string">&quot;&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;2.0&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">        <span class="type">Docket</span> <span class="variable">docket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .apiInfo(apiInfo)</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.sky.controller&quot;</span>))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build();</span><br><span class="line">        <span class="keyword">return</span> docket;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li><li><h3 id="设置静态资源映射，否则接口文档页面无法访问"><a href="#设置静态资源映射，否则接口文档页面无法访问" class="headerlink" title="设置静态资源映射，否则接口文档页面无法访问"></a>设置静态资源映射，否则接口文档页面无法访问</h3><p>WebMvcConfiguration.java</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置静态资源映射</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> registry</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> &#123;</span><br><span class="line">        registry.addResourceHandler(<span class="string">&quot;/doc.html&quot;</span>).addResourceLocations(<span class="string">&quot;classpath:/META-INF/resources/&quot;</span>);</span><br><span class="line">        registry.addResourceHandler(<span class="string">&quot;/webjars/**&quot;</span>).addResourceLocations(<span class="string">&quot;classpath:/META-INF/resources/webjars/&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><h3 id="访问测试"><a href="#访问测试" class="headerlink" title="访问测试"></a>访问测试</h3><p>接口文档访问路径为 <a href="http://ip:port/doc.html">http://ip:port/doc.html</a> —&gt; <a href="http://localhost:8080/doc.html">http://localhost:8080/doc.html</a></p></li></ol><h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><p>通过注解可以控制生成的接口文档，使接口文档拥有更好的可读性，常用注解如下：</p><table><thead><tr><th><strong>注解</strong></th><th><strong>说明</strong></th></tr></thead><tbody><tr><td>@Api</td><td>用在类上，例如Controller，表示对类的说明</td></tr><tr><td>@ApiModel</td><td>用在类上，例如entity、DTO、VO</td></tr><tr><td>@ApiModelProperty</td><td>用在属性上，描述属性信息</td></tr><tr><td>@ApiOperation</td><td>用在方法上，例如Controller的方法，说明方法的用途、作用</td></tr></tbody></table>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发思路 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 接口测试 </tag>
+            
+            <tag> kni4j </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>签到及连续签到统计</title>
       <link href="/KendricW.github.io/2024/03/16/%E7%AD%BE%E5%88%B0%E5%8F%8A%E8%BF%9E%E7%BB%AD%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1/"/>
       <url>/KendricW.github.io/2024/03/16/%E7%AD%BE%E5%88%B0%E5%8F%8A%E8%BF%9E%E7%BB%AD%E7%AD%BE%E5%88%B0%E7%BB%9F%E8%AE%A1/</url>
@@ -47,9 +74,9 @@
       
         <tags>
             
-            <tag> 批量删除 </tag>
-            
             <tag> java </tag>
+            
+            <tag> 批量删除 </tag>
             
         </tags>
       
@@ -99,11 +126,11 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> 登录 </tag>
             
             <tag> 校验 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
