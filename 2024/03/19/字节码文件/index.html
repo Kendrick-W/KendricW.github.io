@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="移动零, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="字节码文件, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>移动零 | Kendrick_W&#39;s Blog</title>
+    <title>字节码文件 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">移动零</h1>
+                    <h1 class="description center-align post-title">字节码文件</h1>
                 </div>
             </div>
         </div>
@@ -431,12 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/KendricW.github.io/tags/%E7%AE%97%E6%B3%95/">
-                                <span class="chip bg-color">算法</span>
-                            </a>
-                        
-                            <a href="/KendricW.github.io/tags/%E5%93%88%E5%B8%8C/">
-                                <span class="chip bg-color">哈希</span>
+                            <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
+                                <span class="chip bg-color">JVM基础篇</span>
                             </a>
                         
                     </div>
@@ -447,8 +443,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/KendricW.github.io/categories/LeetCode/" class="post-category">
-                                LeetCode
+                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
+                                JVM
                             </a>
                         
                     </div>
@@ -460,28 +456,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-03-12
+                    2024-03-19
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-03-13
+                    2024-03-19
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    206
+                    1.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    6 Min
                 </div>
                 
 
@@ -501,16 +497,87 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="移动零（简单）"><a href="#移动零（简单）" class="headerlink" title="移动零（简单）"></a>移动零（简单）</h1><p>[toc]</p>
-<p>给定一个数组 <code>nums</code>，编写一个函数将所有 <code>0</code> 移动到数组的末尾，同时保持非零元素的相对顺序。</p>
-<p>请注意 ，必须在不复制数组的情况下原地对数组进行操作。</p>
-<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例 1:"></a><strong>示例 1:</strong></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: nums = [0,1,0,3,12]</span><br><span class="line">输出: [1,3,12,0,0]</span><br></pre></td></tr></table></figure>
+                <h1 id="字节码文件详解"><a href="#字节码文件详解" class="headerlink" title="字节码文件详解"></a>字节码文件详解</h1><h2 id="Java虚拟机的组成"><a href="#Java虚拟机的组成" class="headerlink" title="Java虚拟机的组成"></a>Java虚拟机的组成</h2><p>Java虚拟机主要分为以下几个组成部分：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MjFlMjRkZGNlYzk1NzI5YzAzNjNlZGE5NGRjOTQ1YWFfNUh3ZUh4YTdMTUZVWFBVa2FDdDVBWFFCUUxJSWpMSnRfVG9rZW46RzVVVGJZSklXbzI4VUl4R3R3YmNYcUh2blBiXzE3MTA3ODEzMzk6MTcxMDc4NDkzOV9WNA" alt="img"></p>
+<ul>
+<li>类加载子系统：核心组件类加载器，负责将字节码文件中的内容加载到内存中。</li>
+<li>运行时数据区：JVM管理的内存，创建出来的对象、类的信息等等内容都会放在这块区域中。</li>
+<li>执行引擎：包含了即时编译器、解释器、垃圾回收器，执行引擎使用解释器将字节码指令解释成机器码，使用即时编译器优化性能，使用垃圾回收器回收不再使用的对象。</li>
+<li>本地接口：调用本地使用C&#x2F;C++编译好的方法，本地方法在Java中声明时，都会带上native关键字，如下图所示。</li>
+</ul>
+<h2 id="字节码文件的组成"><a href="#字节码文件的组成" class="headerlink" title="字节码文件的组成"></a>字节码文件的组成</h2><h3 id="以正确的姿势打开文件"><a href="#以正确的姿势打开文件" class="headerlink" title="以正确的姿势打开文件"></a>以正确的姿势打开文件</h3><p>字节码文件中保存了源代码编译之后的内容，以二进制的方式存储，无法直接用记事本打开阅读。</p>
+<p>通过NotePad++使用十六进制插件查看class文件：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NWU2NTdjYTc0MmE1OWI4NmI4MmZlZWViYWI0YTdjYzdfekY4OVoyY0dBemdjRjRHRzBRZktBWDl0c2E0azFxV1BfVG9rZW46Snh5M2JicTFJb01IWUZ4RXZ1M2NjZ3NsbkdjXzE3MTA3ODE0MDE6MTcxMDc4NTAwMV9WNA" alt="img"></p>
+<p>无法解读出文件里包含的内容，推荐使用 jclasslib工具查看字节码文件。</p>
+<p>Github地址： <a target="_blank" rel="noopener" href="https://github.com/ingokegel/jclasslib">https://github.com/ingokegel/jclasslib</a></p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=N2E3YWNiOGVmOGM1MTUzYjkxOGZlYjZmMzk4ZTQ2YWFfaGZOSmM2Skk3bXVKY2lUWkxWdzZXV1FHek9TSXgycFVfVG9rZW46QU5hZWJodDZKb3N6ZTh4RHllZWMzS2JCbktmXzE3MTA3ODE0MDE6MTcxMDc4NTAwMV9WNA" alt="img"></p>
+<h3 id="字节码文件的组成-1"><a href="#字节码文件的组成-1" class="headerlink" title="字节码文件的组成"></a>字节码文件的组成</h3><p>字节码文件总共可以分为以下几个部分：</p>
+<ul>
+<li><strong>基础信息</strong>：魔数、字节码文件对应的Java版本号、访问标识(public final等等)、父类和接口信息</li>
+<li><strong>常量池</strong>： 保存了字符串常量、类或接口名、字段名，主要在字节码指令中使用</li>
+<li><strong>字段：</strong> 当前类或接口声明的字段信息</li>
+<li><strong>方法：</strong> 当前类或接口声明的方法信息，核心内容为方法的字节码指令</li>
+<li><strong>属性：</strong> 类的属性，比如源码的文件名、内部类的列表等</li>
+</ul>
+<h4 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h4><p>基本信息包含了jclasslib中能看到的两块内容：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=ODk0MjE2Mzk2N2Q0ZTJlYjk5ZDM4NDJlMWQ0OWQxYjBfWVY2ZXFwdXhRUGNkQ1BWbkJaZHhPOU9zclE4TUdJVGZfVG9rZW46U2hHZ2JUS1gzb3VYSTh4Q2lYT2NqS00xblhmXzE3MTA3ODE0OTU6MTcxMDc4NTA5NV9WNA" alt="img"></p>
+<p><strong>Magic魔数</strong></p>
+<p>每个Java字节码文件的前四个字节是固定的，用16进制表示就是0xcafebabe。文件是无法通过文件扩展名来确定文件类型的，文件扩展名可以随意修改不影响文件的内容。软件会使用文件的头几个字节（文件头）去校验文件的类型，如果软件不支持该种类型就会出错。</p>
+<p>比如常见的文件格式校验方式如下：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MmIwZTM0MTE2NDY2YmQyNjQ5YTVhMDhlZTUyYTQ0ZWZfOHBNdjBvWjRjU3NaVmZOU1RHbEdPTlVsNElFZXJUZE1fVG9rZW46TDAyQmJGQXRQbzJ1aEN4YlN2OWNKbW1IbjZkXzE3MTA3ODE1MTY6MTcxMDc4NTExNl9WNA" alt="img"></p>
+<p>Java字节码文件中，将文件头称为magic魔数。Java虚拟机会校验字节码文件的前四个字节是不是0xcafebabe，如果不是，该字节码文件就无法正常使用，Java虚拟机会抛出对应的错误。</p>
+<p><strong>主副版本号</strong></p>
+<p>主副版本号指的是编译字节码文件时使用的JDK版本号，主版本号用来标识大版本号，JDK1.0-1.1使用了45.0-45.3，JDK1.2是46之后每升级一个大版本就加1；副版本号是当主版本号相同时作为区分不同版本的标识，一般只需要关心主版本号。</p>
+<p>1.2之后大版本号计算方法就是 : 主版本号 – 44，比如主版本号52就是JDK8。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=ODBkNjdlMTZkOWNjZGYxNDFhMjkzMTQ3ZDU2NDZhMGRfa0w5aHlFZm5RMFNvcWM3MXEwYzl1ZE0wTVhuVFV4bEhfVG9rZW46VFhVNGJ4b3N2bzN6aG94Zm9mY2NYMURkbkZlXzE3MTA3ODE1MTY6MTcxMDc4NTExNl9WNA" alt="img"></p>
+<p>版本号的作用主要是判断当前字节码的版本和运行时的JDK是否兼容。如果使用较低版本的JDK去运行较高版本JDK的字节码文件，无法使用会显示如下错误：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=YTk0ZDRhOGM2NDQ5ZjA2MzY3NzE3MzNhODQzNWFjZjJfSTRXSDc2NFFuZmZPaFUwZWdnM3VTR2FmaUVBUGpNR1RfVG9rZW46QWNIN2JxUlR1b3hYSDJ4cUpzSGNrbW5ObjFlXzE3MTA3ODE1MTY6MTcxMDc4NTExNl9WNA" alt="img"></p>
+<p>有两种方案：</p>
+<p>1.升级JDK版本，将图中使用的JDK6升级至JDK8即可正常运行，容易引发其他的兼容性问题，并且需要大量的测试。</p>
+<p>2.将第三方依赖的版本号降低或者更换依赖，以满足JDK版本的要求。建议使用这种方案</p>
+<p><strong>其他基础信息</strong></p>
+<p>其他基础信息包括访问标识、类和接口索引，如下：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NzI3ZmM3YmQ3ZWY1ZDUwZjNkNWM1NmQ2MjMyNzhjYjlfUGptdzVOcUxzTGR6YWVPV2d0ak45WXFmS3BFM0xtc3BfVG9rZW46R3BkQ2JFOGhWb3R5Vkx4amNBTWNpSDFBbnNmXzE3MTA3ODE1MTY6MTcxMDc4NTExNl9WNA" alt="img"></p>
+<h4 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h4><p>字节码文件中常量池的作用：避免相同的内容重复定义，节省空间。如下图，常量池中定义了一个字符串，字符串的字面量值为123。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2E0YzQ2YTdkYTkwZDQ4NGUyYzU1ZDJmYTcwYzMxZjlfZnhyQlhrdndTczg4bGc4dlpnS3lhRjRsc0htRVVFcUZfVG9rZW46Q3FWemJCM3p1b2tqbHJ4RUNaZ2N4NTNRbmRkXzE3MTA3ODE3NTc6MTcxMDc4NTM1N19WNA" alt="img"></p>
+<p>比如在代码中，编写了两个相同的字符串“我爱北京天安门”，字节码文件甚至将来在内存中使用时其实只需要保存一份，此时就可以将这个字符串以及字符串里边包含的字面量，放入常量池中以达到节省空间的作用。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="string">&quot;我爱北京天安门&quot;</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">str2</span> <span class="operator">=</span> <span class="string">&quot;我爱北京天安门&quot;</span>;</span><br></pre></td></tr></table></figure>
 
-<h2 id="示例-2"><a href="#示例-2" class="headerlink" title="示例 2:"></a><strong>示例 2:</strong></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: nums = [0]</span><br><span class="line">输出: [0]</span><br></pre></td></tr></table></figure>
+<p>常量池中的数据都有一个编号，编号从1开始。比如“我爱北京天安门”这个字符串，在常量池中的编号就是7。在字段或者字节码指令中通过编号7可以快速的找到这个字符串。</p>
+<p>字节码指令中通过编号引用到常量池的过程称之为符号引用。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=YWU5MjNmZDg4NTZhYTVlZmY4ZTFkMmQ2ZGVlNThmNGZfNXVHN1BnYkZGTHRoTUhlbTBBS0VBRlh0bzJSSGpZTUdfVG9rZW46V0hwQmJoUUhTb2YxdGd4NlR4WWNWWUNLbnZmXzE3MTA3ODE3NTc6MTcxMDc4NTM1N19WNA" alt="img"></p>
+<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><p>字段中存放的是当前类或接口声明的字段信息。</p>
+<p>如下图中，定义了两个字段a1和a2，这两个字段就会出现在字段这部分内容中。同时还包含字段的名字、描述符（字段的类型）、访问标识（public&#x2F;private static final等）。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NWRmYWIzMDMzODY3OGVlZTFlNWI3MTI4YmQyZWFhN2NfM0pQQmVZUXZsUTNYWm52OVUzd1lGdnZ1VUVpTkhadFVfVG9rZW46SzE3dWJMa3BPb0drMWF4dXRlTmN6Y3k3blNlXzE3MTA3ODE4ODc6MTcxMDc4NTQ4N19WNA" alt="img"></p>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>字节码中的方法区域是存放<strong>字节码****指令</strong>的核心位置，字节码指令的内容存放在方法的Code属性中。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NDEzYzAyMjI3OGMxNmM2OGNiMjVhYWZkZGM1NTg4MTBfTHRMa1prdG1GTHBucWVkVmk2T3RkN1dKZTJMZThVTkVfVG9rZW46WHRIMWI2MTVobzZ6UVJ4bjRid2NkcmNZbnFlXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>通过分析方法的字节码指令，可以清楚地了解一个方法到底是如何执行的。先来看如下案例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a><strong>题解</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> class 移动零 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">moveZeroes</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="comment">//如果数组是空的直接返回，不浪费时间</span></span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//记录非零的数目</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//第一次遍历的时候，只要是非0的统统都赋给nums[j]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i] != <span class="number">0</span>)&#123;</span><br><span class="line">                nums[j++] = nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将后面的数补0</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> j; i &lt; nums.length; i++) &#123;</span><br><span class="line">            nums[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://big-event-wzx.oss-cn-beijing.aliyuncs.com/image-20240312002556724.png" alt="成果"></p>
+<p>这段代码编译成字节码指令之后是如下内容：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MmQxZmQxZmYzZjNhMzI5ZDE4ZTBmNWRjZGZjZGJmNjZfejc5eHdhZXFweGZQQTJLR090R1hCaGNpVkJHSTk3YWFfVG9rZW46Q2ltcmJBbVR1b0ZEMDJ4TFlLWWNSR3Q4blJlXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>要理解这段字节码指令是如何执行的，我们需要先理解两块内存区域：操作数栈和局部变量表。</p>
+<p><strong>操作数栈</strong>是用来存放临时数据的内容，是一个栈式的结构，先进后出。</p>
+<p><strong>局部变量****表</strong>是存放方法中的局部变量，包含方法的参数、方法中定义的局部变量，在编译期就已经可以确定方法有多少个局部变量。</p>
+<p>1、iconst_0，将常量0放入操作数栈。此时栈上只有0。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=YjljNWM5ZjA0N2NmM2YxNDk5Yjc4MmJhZDFjYjJhYjhfdTJFT0ZyV25IVjRKdVhNU2ozWmRmTXBSZmpLb0owdGhfVG9rZW46QXdhS2J2ZDJkb0ZTTUl4WEk2dWM4c0xObmg3XzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>2、istore_1会从操作数栈中，将栈顶的元素弹出来，此时0会被弹出，放入局部变量表的1号位置。局部变量表中的1号位置，在编译时就已经确定是局部变量i使用的位置。完成了对局部变量i的赋值操作。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MWMxODAxZjk5MWRmNmU2OGI2MGIyMWNiYWM5YWMxMTZfcGpuWnd1cHhQSGxJWWdGR1ZjbzhYOVloZHlsejhEcmNfVG9rZW46SngxQWI5QVBib1R0VFN4VHZ5OWNIaWQxbjhCXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>3、iload_1将局部变量表1号位置的数据放入操作数栈中，此时栈中会放入0。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NDE0ZGU3MjgyY2Q2MDlhZjMwZjZmODg2NTE1YzI0NDJfRXdsemxOS2prMGlOVExoWWNMZGJlUTZOc0trVjRVY0lfVG9rZW46UTlST2JTdDBwb1lBQTR4VWdoQWNkaXVibndkXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>4、iconst_1会将常量1放入操作数栈中。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MWU4MjNkZmM4ZmE0MGUzNTJiYWUyZDBkZjA5ZWZlODRfdkE1VVRXZWpjNDBhbmhZcHRGaTF2YWE1MTNFbFhtUGNfVG9rZW46V1ljcmJXYjV2b0swYlB4dkFoaGNwUTUwbmhiXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>5、iadd会将操作数栈顶部的两个数据相加，现在操作数栈上有两个数0和1，相加之后结果为1放入操作数栈中，此时栈上只有一个数也就是相加的结果1。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MGFlMTU1NjQxNTc5ZWViNzUyMWI5Mzc5YWMxMmMyMzRfUlI2MWhwTmVuNjI2Q0M1SGk3Q01scm9DcGhZZE0yTHdfVG9rZW46Vm1RZmJ3RkdXb0N4enJ4S0ZTRGNMNnBtbmJmXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>6、istore_2从操作数栈中将1弹出，并放入局部变量表的2号位置，2号位置是j在使用。完成了对局部变量j的赋值操作。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=MTZjM2MwZGY3YTc4OGEwMWJmYzBiZDliZmM5MGFmMDBfZGE4N0Foalo4M3lVTWdJcXRuSWZqQnpQTW80Z21FRTZfVG9rZW46T0VkUGJaQXZUb2NxdjB4dEtaZ2M2ejFqblZlXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>7、return语句执行，方法结束并返回。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NGVmMzI5ZDIwYjM4NjI1OWRlNDQ4MjE0ZjZjOTI3YWJfRzZxZlRVczZrWFZPbDlJT2dYMmxvd1R6MHdUb2tUSWRfVG9rZW46VFJIWmJQZ1Ftb2ZaZUx4UXI3TGM4Y2FtbjZkXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>同理，同学们可以自行分析下i++和++i的字节码指令执行的步骤。</p>
+<p>i++的字节码指令如下，其中iinc 1 by 1指令指的是将局部变量表1号位置增加1，其实就实现了i++的操作。</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=NmVlZmU1Y2IyMGM0OWQ0NGVkZTBmNGJiY2M5MjQ5MDJfNnQxZElMVDZSNUdxV2luUU5LZldTMURlRnlMNkRGTzVfVG9rZW46UE9rbWJ3QWhmb1JnWFR4WXJ0Z2MzOXZjblZoXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
+<p>而++i只是对两个字节码指令的顺序进行了更改：</p>
+<p><img src="https://lisxpq12rl7.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmYwMjQxM2Q0OTEwYjRlMDYwNWMyYjNjMjc0NmM3NjJfQ3dSR3NwSHVPWExJQklremQyR25Gc21pWFVqMWtxYnRfVG9rZW46RmFaMGJ6dXFHb3pyNnF4MHBmZmNjNVJubkJoXzE3MTA3ODE5MTY6MTcxMDc4NTUxNl9WNA" alt="img"></p>
 
                 
             </div>
@@ -537,7 +604,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E7%AE%97%E6%B3%95-%E7%A7%BB%E5%8A%A8%E9%9B%B6/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/12/%E7%AE%97%E6%B3%95-%E7%A7%BB%E5%8A%A8%E9%9B%B6/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -575,12 +642,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/KendricW.github.io/tags/%E7%AE%97%E6%B3%95/">
-                                    <span class="chip bg-color">算法</span>
-                                </a>
-                            
-                                <a href="/KendricW.github.io/tags/%E5%93%88%E5%B8%8C/">
-                                    <span class="chip bg-color">哈希</span>
+                                <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
+                                    <span class="chip bg-color">JVM基础篇</span>
                                 </a>
                             
                         </div>
@@ -624,17 +687,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/12/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/">
+                <a href="/KendricW.github.io/2024/03/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="字母异位词分组">
+                        <img src="/KendricW.github.io/medias/featureimages/13.jpg" class="responsive-img" alt="字节码文件">
                         
-                        <span class="card-title">字母异位词分组</span>
+                        <span class="card-title">字节码文件</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -644,26 +708,27 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-12
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/LeetCode/" class="post-category">
-                                    LeetCode
+                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
+                                    JVM
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
+                    <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
+                        <span class="chip bg-color">JVM基础篇</span>
                     </a>
                     
                 </div>
@@ -677,13 +742,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/10/hello-world/">
+                <a href="/KendricW.github.io/2024/03/19/%E5%88%9D%E8%AF%86JVM/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/KendricW.github.io/medias/featureimages/16.jpg" class="responsive-img" alt="初识JVM">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">初识JVM</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -694,15 +759,27 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-19
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Kendrick_W
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
+                                    JVM
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
+                        <span class="chip bg-color">JVM基础篇</span>
+                    </a>
+                    
                 </div>
                 
             </div>
