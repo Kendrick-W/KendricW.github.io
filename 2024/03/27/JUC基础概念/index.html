@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="字节码文件, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="JUC基础概念, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>字节码文件 | Kendrick_W&#39;s Blog</title>
+    <title>JUC基础概念 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">字节码文件</h1>
+                    <h1 class="description center-align post-title">JUC基础概念</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
-                                <span class="chip bg-color">JVM基础篇</span>
+                            <a href="/KendricW.github.io/tags/JUC/">
+                                <span class="chip bg-color">JUC</span>
+                            </a>
+                        
+                            <a href="/KendricW.github.io/tags/%E5%9F%BA%E7%A1%80/">
+                                <span class="chip bg-color">基础</span>
                             </a>
                         
                     </div>
@@ -443,8 +447,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
-                                JVM
+                            <a href="/KendricW.github.io/categories/JUC/" class="post-category">
+                                JUC
                             </a>
                         
                     </div>
@@ -456,28 +460,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-03-19
+                    2024-03-27
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-03-19
+                    2024-03-27
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.3k
+                    744
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    4 Min
+                    2 Min
                 </div>
                 
 
@@ -497,46 +501,46 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="字节码文件详解"><a href="#字节码文件详解" class="headerlink" title="字节码文件详解"></a>字节码文件详解</h1><h2 id="Java虚拟机的组成"><a href="#Java虚拟机的组成" class="headerlink" title="Java虚拟机的组成"></a>Java虚拟机的组成</h2><p>Java虚拟机主要分为以下几个组成部分：</p>
-<ul>
-<li>类加载子系统：核心组件类加载器，负责将字节码文件中的内容加载到内存中。</li>
-<li>运行时数据区：JVM管理的内存，创建出来的对象、类的信息等等内容都会放在这块区域中。</li>
-<li>执行引擎：包含了即时编译器、解释器、垃圾回收器，执行引擎使用解释器将字节码指令解释成机器码，使用即时编译器优化性能，使用垃圾回收器回收不再使用的对象。</li>
-<li>本地接口：调用本地使用C&#x2F;C++编译好的方法，本地方法在Java中声明时，都会带上native关键字，如下图所示。</li>
+                <h1 id="JUC基础概念"><a href="#JUC基础概念" class="headerlink" title="JUC基础概念"></a>JUC基础概念</h1><h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a><strong>进程</strong></h3><ul>
+<li><p>程序由指令和数据组成，但这些指令要运行，数据要读写，就必须将指令加载至 CPU，数据加载至内存。在指令运行过程中还需要用到磁盘、网络等设备。进程就是用来加载指令、管理内存、管理 IO 的</p>
+</li>
+<li><p>当一个程序被运行，从磁盘加载这个程序的代码至内存，这时就开启了一个进程。</p>
+</li>
+<li><p>进程就可以视为程序的一个实例。大部分程序可以同时运行多个实例进程（例如记事本、画图、浏览器等），也有的程序只能启动一个实例进程（例如网易云音乐、360 安全卫士等）</p>
+</li>
 </ul>
-<h2 id="字节码文件的组成"><a href="#字节码文件的组成" class="headerlink" title="字节码文件的组成"></a>字节码文件的组成</h2><h3 id="以正确的姿势打开文件"><a href="#以正确的姿势打开文件" class="headerlink" title="以正确的姿势打开文件"></a>以正确的姿势打开文件</h3><p>无法解读出文件里包含的内容，推荐使用 jclasslib工具查看字节码文件。</p>
-<p>Github地址： <a target="_blank" rel="noopener" href="https://github.com/ingokegel/jclasslib">https://github.com/ingokegel/jclasslib</a></p>
-<h3 id="字节码文件的组成-1"><a href="#字节码文件的组成-1" class="headerlink" title="字节码文件的组成"></a>字节码文件的组成</h3><p>字节码文件总共可以分为以下几个部分：</p>
-<ul>
-<li><strong>基础信息</strong>：魔数、字节码文件对应的Java版本号、访问标识(public final等等)、父类和接口信息</li>
-<li><strong>常量池</strong>： 保存了字符串常量、类或接口名、字段名，主要在字节码指令中使用</li>
-<li><strong>字段：</strong> 当前类或接口声明的字段信息</li>
-<li><strong>方法：</strong> 当前类或接口声明的方法信息，核心内容为方法的字节码指令</li>
-<li><strong>属性：</strong> 类的属性，比如源码的文件名、内部类的列表等</li>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a><strong>线程</strong></h3><ul>
+<li><p>一个进程之内可以分为一到多个线程。</p>
+</li>
+<li><p>一个线程就是一个指令流，将指令流中的一条条指令以一定的顺序交给 CPU 执行</p>
+</li>
+<li><p>Java 中，线程作为最小调度单位，进程作为资源分配的最小单位。 在 windows 中进程是不活动的，只是作为线程的容器</p>
+</li>
 </ul>
-<h4 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h4><p><strong>Magic魔数</strong></p>
-<p>每个Java字节码文件的前四个字节是固定的，用16进制表示就是0xcafebabe。文件是无法通过文件扩展名来确定文件类型的，文件扩展名可以随意修改不影响文件的内容。软件会使用文件的头几个字节（文件头）去校验文件的类型，如果软件不支持该种类型就会出错。</p>
-<p>Java字节码文件中，将文件头称为magic魔数。Java虚拟机会校验字节码文件的前四个字节是不是0xcafebabe，如果不是，该字节码文件就无法正常使用，Java虚拟机会抛出对应的错误。</p>
-<p><strong>主副版本号</strong></p>
-<p>1.2之后大版本号计算方法就是 : <em><strong>主版本号 – 44，比如主版本号52就是JDK8。</strong></em></p>
-<p>版本号的作用主要是判断当前字节码的版本和运行时的JDK是否兼容。如果使用较低版本的JDK去运行较高版本JDK的字节码文件，无法使用会显示错误</p>
-<p>有两种方案：</p>
-<p>1.<strong>升级JDK版本</strong>，将图中使用的JDK6升级至JDK8即可正常运行，容易引发其他的兼容性问题，并且需要大量的测试。</p>
-<p>2.<strong>将第三方依赖的版本号降低或者更换依赖</strong>，以满足JDK版本的要求。建议使用这种方案</p>
-<p><strong>其他基础信息</strong></p>
-<p>其他基础信息包括访问标识、类和接口索引</p>
-<h4 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h4><p>字节码文件中常量池的作用：避免相同的内容重复定义，节省空间。</p>
-<p>比如在代码中，编写了两个相同的字符串“我爱北京天安门”，字节码文件甚至将来在内存中使用时其实只需要保存一份，此时就可以将这个字符串以及字符串里边包含的字面量，放入常量池中以达到节省空间的作用。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="string">&quot;我爱北京天安门&quot;</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">str2</span> <span class="operator">=</span> <span class="string">&quot;我爱北京天安门&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>常量池中的数据都有一个编号，编号从1开始。比如“我爱北京天安门”这个字符串，在常量池中的编号就是7。在字段或者字节码指令中通过编号7可以快速的找到这个字符串。</p>
-<p>字节码指令中通过编号引用到常量池的过程称之为符号引用。</p>
-<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><p>字段中存放的是当前类或接口声明的字段信息。</p>
-<p>如下图中，定义了两个字段a1和a2，这两个字段就会出现在字段这部分内容中。同时还包含字段的名字、描述符（字段的类型）、访问标识（public&#x2F;private static final等）。</p>
-<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>字节码中的方法区域是存放<strong>字节码****指令</strong>的核心位置，字节码指令的内容存放在方法的Code属性中。</p>
-<p>要理解这段字节码指令是如何执行的，我们需要先理解两块内存区域：操作数栈和局部变量表。</p>
-<p><strong>操作数栈</strong>是用来存放临时数据的内容，是一个栈式的结构，先进后出。</p>
-<p><strong>局部变量****表</strong>是存放方法中的局部变量，包含方法的参数、方法中定义的局部变量，在编译期就已经可以确定方法有多少个局部变量。</p>
+<h3 id="二者对比"><a href="#二者对比" class="headerlink" title="二者对比"></a>二者对比</h3><ul>
+<li>进程基本上相互独立的，而线程存在于进程内，是进程的一个子集</li>
+<li>进程拥有共享的资源，如内存空间等，供其内部的线程共享</li>
+<li>进程间通信较为复杂<ul>
+<li>同一台计算机的进程通信称为 IPC（Inter-process communication）</li>
+<li>不同计算机之间的进程通信，需要通过网络，并遵守共同的协议，例如 HTTP</li>
+</ul>
+</li>
+<li>线程通信相对简单，因为它们共享进程内的内存，一个例子是多个线程可以访问同一个共享变量</li>
+<li>线程更轻量，线程上下文切换成本一般上要比进程上下文切换低</li>
+</ul>
+<h2 id="并发与并行"><a href="#并发与并行" class="headerlink" title="并发与并行"></a>并发与并行</h2><p>单核 cpu 下，线程实际还是 串行执行 的。操作系统中有一个组件叫做任务调度器，将 cpu 的时间片（windows</p>
+<p>下时间片最小约为 15 毫秒）分给不同的程序使用，只是由于 cpu 在线程间（时间片很短）的切换非常快，人类感</p>
+<p>觉是 同时运行的 。总结为一句话就是： 微观串行，宏观并行 ，</p>
+<h3 id="引用-Rob-Pike-的一段描述："><a href="#引用-Rob-Pike-的一段描述：" class="headerlink" title="引用 Rob Pike 的一段描述："></a>引用 Rob Pike 的一段描述：</h3><p><strong>并发</strong>（concurrent）是同一时间应对（dealing with）多件事情的能力</p>
+<p><strong>并行</strong>（parallel）是同一时间动手做（doing）多件事情的能力</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><ul>
+<li><p>家庭主妇做饭、打扫卫生、给孩子喂奶，她一个人轮流交替做这多件事，这时就是并发</p>
+</li>
+<li><p>家庭主妇雇了个保姆，她们一起这些事，这时既有并发，也有并行（这时会产生竞争，例如锅只有一口，一个人用锅时，另一个人就得等待）</p>
+</li>
+<li><p>雇了3个保姆，一个专做饭、一个专打扫卫生、一个专喂奶，互不干扰，这时是并行</p>
+</li>
+</ul>
 
                 
             </div>
@@ -563,7 +567,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/19/%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/27/JUC%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/27/JUC%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -601,8 +605,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
-                                    <span class="chip bg-color">JVM基础篇</span>
+                                <a href="/KendricW.github.io/tags/JUC/">
+                                    <span class="chip bg-color">JUC</span>
+                                </a>
+                            
+                                <a href="/KendricW.github.io/tags/%E5%9F%BA%E7%A1%80/">
+                                    <span class="chip bg-color">基础</span>
                                 </a>
                             
                         </div>
@@ -646,17 +654,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/20/%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+                <a href="/KendricW.github.io/2024/03/27/JUC%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/6.jpg" class="responsive-img" alt="类的生命周期">
+                        <img src="/KendricW.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="JUC基础概念">
                         
-                        <span class="card-title">类的生命周期</span>
+                        <span class="card-title">JUC基础概念</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -666,26 +675,31 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
-                                    JVM
+                            <a href="/KendricW.github.io/categories/JUC/" class="post-category">
+                                    JUC
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
-                        <span class="chip bg-color">JVM基础篇</span>
+                    <a href="/KendricW.github.io/tags/JUC/">
+                        <span class="chip bg-color">JUC</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E5%9F%BA%E7%A1%80/">
+                        <span class="chip bg-color">基础</span>
                     </a>
                     
                 </div>
@@ -699,13 +713,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/19/%E5%88%9D%E8%AF%86JVM/">
+                <a href="/KendricW.github.io/2024/03/27/%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%E6%80%9D%E8%B7%AF/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/16.jpg" class="responsive-img" alt="初识JVM">
+                        <img src="/KendricW.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="条件查询思路">
                         
-                        <span class="card-title">初识JVM</span>
+                        <span class="card-title">条件查询思路</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -716,14 +730,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-19
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-27
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/JVM/" class="post-category">
-                                    JVM
+                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
                                 </a>
                             
                             
@@ -733,8 +747,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/JVM%E5%9F%BA%E7%A1%80%E7%AF%87/">
-                        <span class="chip bg-color">JVM基础篇</span>
+                    <a href="/KendricW.github.io/tags/%E6%9F%A5%E8%AF%A2/">
+                        <span class="chip bg-color">查询</span>
                     </a>
                     
                 </div>
