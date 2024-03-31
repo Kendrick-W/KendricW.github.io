@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Java集合基础, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="Mysql锁, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Java集合基础 | Kendrick_W&#39;s Blog</title>
+    <title>Mysql锁 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/18.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Java集合基础</h1>
+                    <h1 class="description center-align post-title">Mysql锁</h1>
                 </div>
             </div>
         </div>
@@ -431,12 +431,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/KendricW.github.io/tags/%E9%9D%A2%E8%AF%95/">
-                                <span class="chip bg-color">面试</span>
+                            <a href="/KendricW.github.io/tags/Mysql/">
+                                <span class="chip bg-color">Mysql</span>
                             </a>
                         
-                            <a href="/KendricW.github.io/tags/%E9%9B%86%E5%90%88/">
-                                <span class="chip bg-color">集合</span>
+                            <a href="/KendricW.github.io/tags/%E9%94%81/">
+                                <span class="chip bg-color">锁</span>
                             </a>
                         
                     </div>
@@ -460,28 +460,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-03-28
+                    2024-03-31
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-03-28
+                    2024-03-31
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.1k
+                    1.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    3 Min
+                    5 Min
                 </div>
                 
 
@@ -501,96 +501,116 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><h3 id="List-Set-Queue-Map-四者的区别"><a href="#List-Set-Queue-Map-四者的区别" class="headerlink" title="List, Set, Queue, Map 四者的区别"></a>List, Set, Queue, Map 四者的区别</h3><ul>
-<li><code>List</code>(对付顺序的好帮手)：存储元素是有序的、可重复的</li>
-<li><code>Set</code>(独一无二的性质)：存储的元素不可而重复的</li>
-<li><code>Queue</code>(实现排队功能的叫号机)：按照特定的排队规则来确定先后顺序，存储的元素是有有序的、可重复的</li>
-<li><code>Map</code>(用Key来搜索)：使用键值对存储<ul>
-<li>key 无序的 不可重复的</li>
-<li>value 无序的 可重复的</li>
-<li>每个键最多映射到一个值</li>
-</ul>
-</li>
-</ul>
-<h2 id="Collection接口下面的集合"><a href="#Collection接口下面的集合" class="headerlink" title="Collection接口下面的集合"></a>Collection接口下面的集合</h2><h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><ul>
-<li><p><code>ArrayList</code>：</p>
-<ul>
-<li>底层实现：基于动态数组</li>
-<li>查询速度快，通过索引访问元素的时间复杂度是O(1)，因为可以直接通过数组下标访问</li>
-<li>插入和删除较慢（非首尾）当插入或删除元素时，为了维护数组的连续性，可能需要移动大量元素，时间复杂度通常是O(n)</li>
-<li>可以容纳NULL</li>
-<li>线程不安全，在多线程环境下若需保证线程安全，需要自行加锁或者使用<code>Collections.synchronizedList()</code> 方法包装。</li>
-<li>动态扩容 当容量不足时，会自动扩大容量，一般按照容量的50%或更多进行扩容</li>
-</ul>
-</li>
-<li><p><code>Vector</code>：</p>
-<ul>
-<li>底层实现：类似于ArrayList，也是基于数组</li>
-<li>特点：<ul>
-<li>功能上与ArrayList类似，但是它线程安全，内部方法都被同步了，因此多线程环境下操作不需要额外同步控制，但这也以为着并发访问时性能可能会比较低</li>
-<li>同样具有动态扩容能力，但是在早期的Java版本中，默认的扩容策略也ArrayList不完全相同</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><code>LinkedList</code>：</p>
-<ul>
-<li>底层实现：基于双向链表</li>
-<li>特点<ul>
-<li>查询速度相对慢，由于链表结构，通过索引访问元素需要从头节点或者尾节点开始逐个遍历，时间复杂度为O(n)</li>
-<li>插入和删除较快，在链表任何位置插入或者删除元素仅需改变相关节点的指针，时间复杂度为O(1)</li>
-<li>可以容纳NULL</li>
-<li>线程不安全</li>
-<li>对于频繁的插入和删除操作以及需要高效的队列或双端队列功能时更为适用。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="ArrayList和Array（数组）的区别"><a href="#ArrayList和Array（数组）的区别" class="headerlink" title="ArrayList和Array（数组）的区别"></a>ArrayList和Array（数组）的区别</h4><p><code>ArrayList</code> 内部基于动态数组实现，比 <code>Array</code>（静态数组） 使用起来更加灵活：</p>
-<ul>
-<li><code>ArrayList</code>会根据实际存储的元素动态地扩容或缩容，而 <code>Array</code> 被创建之后就不能改变它的长度了。</li>
-<li><code>ArrayList</code> 允许你使用泛型来确保类型安全，<code>Array</code> 则不可以。</li>
-<li><code>ArrayList</code> 中只能存储对象。对于基本类型数据，需要使用其对应的包装类（如 Integer、Double 等）。<code>Array</code> 可以直接存储基本类型数据，也可以存储对象。</li>
-<li><code>ArrayList</code> 支持插入、删除、遍历等常见操作，并且提供了丰富的 API 操作方法，比如 <code>add()</code>、<code>remove()</code>等。<code>Array</code> 只是一个固定长度的数组，只能按照下标访问其中的元素，不具备动态添加、删除元素的能力。</li>
-<li><code>ArrayList</code>创建时不需要指定大小，而<code>Array</code>创建时必须指定大小。</li>
-</ul>
-<hr>
-<h4 id="ArrayList可以添加null值吗？"><a href="#ArrayList可以添加null值吗？" class="headerlink" title="ArrayList可以添加null值吗？"></a>ArrayList可以添加null值吗？</h4><p><code>ArrayList</code> 中可以存储任何类型的对象，包括 <code>null</code> 值。不过，不建议向<code>ArrayList</code> 中添加 <code>null</code> 值， <code>null</code> 值无意义，会让代码难以维护比如忘记做判空处理就会导致空指针异常。</p>
-<p>示例代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ArrayList&lt;String&gt; listOfStrings = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">listOfStrings.add(<span class="literal">null</span>);</span><br><span class="line">listOfStrings.add(<span class="string">&quot;java&quot;</span>);</span><br><span class="line">System.out.println(listOfStrings);</span><br></pre></td></tr></table></figure>
+                <h1 id="Mysql-各种锁"><a href="#Mysql-各种锁" class="headerlink" title="Mysql 各种锁"></a>Mysql 各种锁</h1><h2 id="粒度锁"><a href="#粒度锁" class="headerlink" title="粒度锁"></a>粒度锁</h2><p>Mysql 的锁定主要分为全局锁、表锁和行锁</p>
+<h3 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h3><ol>
+<li><code>读锁</code>（共享锁）：它阻止其他用户更新数据，但允许他们读取数据。保持一段时间内的数据一致性时很有用。</li>
+<li><code>写锁</code>（排他锁）：它阻止其他用户读取和更新数据。在修改大量数据，并不希望其他用户来干扰的这段时间很有用。</li>
+</ol>
+<p>使用场景：全库备份、全库导出、全库只读</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">FLUSH TABLES WITH READ LOCK (FTWRL)</span><br><span class="line">UNLOCK TABLES</span><br></pre></td></tr></table></figure>
 
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[null, java]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>全局锁的开销非常大，因为会阻止其他所有的数据修改操作，并且在高并发情况下可能导致大量的线程等待锁定。因此应该避免在生产环境中使用全局锁，或者尽量减少全局所的持有时间</li>
+</ul>
+<h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><ol>
+<li>表共享读锁（Table Read Lock）</li>
+<li>表独占写锁（Table Write Lock）</li>
+</ol>
+<p>在 Mysql 中，对 MyISAM 表的读操作，会自动加上读锁，写亦是如此</p>
+<p>适用于读多写少，并发争用不是很激烈</p>
+<p>使用场景：读密集型应用、写操作不频繁、数据量不大、全表更新或删除</p>
+<p>开销较小但是锁的粒度大，并发能力低，不适合高并发</p>
+<h4 id="哪些命令会发生表级锁"><a href="#哪些命令会发生表级锁" class="headerlink" title="哪些命令会发生表级锁"></a>哪些命令会发生表级锁</h4><ol>
+<li><strong>ALTER TABLE</strong>：当对表结构进行修改时，如添加、删除列或者索引，或者更改表的存储引擎等操作，MySQL会对整张表施加表级锁。</li>
+<li><strong>LOCK TABLES</strong>：这是一个显式的加锁命令，可以通过指定<code>READ</code>或<code>WRITE</code>模式来对表进行加锁。例如，<code>LOCK TABLES t1 READ</code>会对表<code>t1</code>施加共享锁，而<code>LOCK TABLES t1 WRITE</code>则会施加排他锁。</li>
+<li><strong>REPAIR TABLE</strong>：当执行表修复操作时，MySQL会对表施加锁，以防止在修复过程中数据被修改。</li>
+<li><strong>OPTIMIZE TABLE</strong>：执行表优化操作时，MySQL也会对表施加锁，以确保在优化过程中表的数据不会被更改。</li>
+<li><strong>DELETE</strong>、<strong>INSERT</strong>、<strong>UPDATE</strong>：虽然这些操作通常与行级锁相关，但在某些情况下，如果存储引擎不支持行级锁，或者操作涉及到全表扫描，MySQL可能会对表施加表级锁。</li>
+<li><strong>SELECT … FOR UPDATE</strong> 和 <strong>SELECT … LOCK IN SHARE MODE</strong>：这两个查询提示可以用于显式地对查询结果施加行级锁或共享锁，但如果查询条件没有使用索引，或者存储引擎不支持行级锁，MySQL可能会回退到使用表级锁。</li>
+</ol>
+<h4 id="风险点"><a href="#风险点" class="headerlink" title="风险点"></a>风险点</h4><ol>
+<li>性能下降</li>
+<li>并发能力差</li>
+<li>可能导致锁等待和超时</li>
+<li>写操作影响大</li>
+<li>死锁的可能性：多标操作中，如果没有按照一定的顺序获得锁，可能会导致死锁</li>
+</ol>
+<p>为了避免这些问题，通常会选择 InnoDB 存储引擎，它主要使用行级锁，可以提供更好的并发性能，一定程度上较少了锁争用的问题，而且还支持事物，可以保证数据的一致性和完整性。</p>
+<h3 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h3><p>单行锁定，粒度小，更好的并发性能和更少的锁冲突。</p>
+<p>需要更多的内存和 CPU 资源，因为每一行都需要管理。</p>
+<ol>
+<li>共享锁（S 锁）</li>
+<li>排他锁（X 锁）</li>
+</ol>
+<p>实际使用中，InnoDB 还提供了一种间隙锁的特性。</p>
+<p>值得注意的是，行级锁只在事务中有效。</p>
+<p>使用场景</p>
+<ul>
+<li>高并发读写</li>
+<li>单行操作</li>
+<li>短期锁</li>
+<li>实现并发控制</li>
+<li>复杂事务处理</li>
+</ul>
+<h4 id="哪些命令会发生表级锁-1"><a href="#哪些命令会发生表级锁-1" class="headerlink" title="哪些命令会发生表级锁"></a>哪些命令会发生表级锁</h4><ol>
+<li><p><strong>SELECT … FOR UPDATE</strong>: 这个命令用于锁定查询结果中的行，以便进行更新操作。它对查询到的行加上排他锁（X锁），阻止其他事务对这些行进行修改或加排他锁，直到当前事务完成（提交或回滚）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT * FROM table_name WHERE condition FOR UPDATE;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SELECT … LOCK IN SHARE MODE</strong>: 这个命令用于锁定查询结果中的行，以便进行共享读取操作。它对查询到的行加上共享锁（S锁），阻止其他事务对这些行加排他锁，但允许其他事务对这些行加共享锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT * FROM table_name WHERE condition LOCK IN SHARE MODE;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>UPDATE</strong>: 当执行更新操作时，InnoDB会对涉及的行加上排他锁（X锁），防止其他事务对这些行进行修改。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UPDATE table_name SET column_name = value WHERE condition;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>DELETE</strong>: 删除操作也会对涉及的行加上排他锁（X锁），确保删除的行不能被其他事务修改。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DELETE FROM table_name WHERE condition;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>INSERT</strong>: 在执行插入操作时，如果插入的行是基于索引的，InnoDB会对这些行加上排他锁（X锁）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INSERT INTO table_name (column1, column2, ...) VALUES (value1, value2, ...);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>REPLACE</strong>: REPLACE命令类似于INSERT，但如果插入的行的索引键已存在，则先删除旧行再插入新行，这个过程中会对涉及的行加上排他锁（X锁）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">复制</span><br><span class="line">REPLACE INTO table_name (column1, column2, ...) VALUES (value1, value2, ...);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="风险点-1"><a href="#风险点-1" class="headerlink" title="风险点"></a>风险点</h4><ol>
+<li>锁升级</li>
+<li>死锁</li>
+<li>锁等待</li>
+<li>资源消耗</li>
+<li>难以调试和排查</li>
+<li>事务隔离级别</li>
+</ol>
+<h2 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h2><h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p>在表中加一个关于版本的字段，可以是时间戳也可以是版本号，在做修改操作的时候，对比版本号是否一致</p>
+<p>使用场景</p>
+<ul>
+<li>低冲突环境</li>
+<li>读多写少</li>
+<li>短事务操作</li>
+<li>分布式系统：网络延迟</li>
+<li>互联网应用：多数是读取，修改同一数据几率较小</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>冲突检测：在高并发的环境中，乐观锁可能会导致大量的冲突。因为乐观锁只有提交事务时才检查是否有冲突，如果多个事物同一时间操作同一行，只有一个事务能提交成功，其他的事务都要大量的回滚并且重新尝试</li>
+<li>处理开销：大量的回滚和重试，这会增加系统的开销，导致性能下降</li>
+<li>版本管理：乐观锁通常通过版本号来检测冲突，这要求系统能正确地管理这些版本号</li>
+<li>编程复杂性：更复杂的编程</li>
+</ul>
+<h3 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h3><p>为了保证数据的完整性和一致性，每次在读写数据时都会先加锁，避免其他事务惊醒并发的读写操作</p>
+<p>使用场景：</p>
+<ul>
+<li>写操作多的场景：预先加锁确保数据的完整性和一致性</li>
+<li>并发冲突高的场景</li>
+<li>有特务需要强一致的场景</li>
+</ul>
+<p>值得注意的是，悲观锁也可能引入死锁的问题和锁定过程中事务长时间等待而影响性能。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT ... FOR UODATE</span><br><span class="line">SELETE ... LOCK IN SHARE MODE</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><ul>
-<li><p><code>HashSet</code></p>
+<p>缺点：</p>
 <ul>
-<li>底层实现：哈希表</li>
-<li>无序且不重复</li>
-<li>添加、删除以及查询元素的时间复杂度O(1)平均情况</li>
-<li>不保证元素的迭代顺序，如果需要插入顺序或者自然顺序，请使用LinkedHashSet或TreeSet。</li>
-</ul>
-</li>
-<li><p><code>LinkedHashSet</code>: </p>
-<ul>
-<li>底层实现：继承自HashSet</li>
-<li>元素的迭代顺序是按照它们被插入到 set 中的顺序进行的</li>
-</ul>
-</li>
-<li><p><code>TreeSet</code></p>
-<ul>
-<li>底层实现：基于红黑树（自平衡二叉查找树）实现</li>
-<li>自然排序，总是处于排序状态。</li>
-<li>查找、删除和插入操作的时间复杂度为O(log n)，n为集合中元素的数量。</li>
-</ul>
-</li>
-</ul>
-<h3 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h3><ul>
-<li><code>PriorityQueue</code>: </li>
-<li><code>DelayQueue</code>:</li>
-<li><code>ArrayDeque</code>: 可扩容动态双向数组。</li>
+<li>性能开销</li>
+<li>并发度降低</li>
+<li>死锁</li>
+<li>锁超时</li>
 </ul>
 
                 
@@ -618,7 +638,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/28/Java%E9%9B%86%E5%90%88%EF%BC%88%E9%9D%A2%E8%AF%95%EF%BC%89/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/28/Java%E9%9B%86%E5%90%88%EF%BC%88%E9%9D%A2%E8%AF%95%EF%BC%89/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/31/Mysql%E9%94%81/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/03/31/Mysql%E9%94%81/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -656,12 +676,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/KendricW.github.io/tags/%E9%9D%A2%E8%AF%95/">
-                                    <span class="chip bg-color">面试</span>
+                                <a href="/KendricW.github.io/tags/Mysql/">
+                                    <span class="chip bg-color">Mysql</span>
                                 </a>
                             
-                                <a href="/KendricW.github.io/tags/%E9%9B%86%E5%90%88/">
-                                    <span class="chip bg-color">集合</span>
+                                <a href="/KendricW.github.io/tags/%E9%94%81/">
+                                    <span class="chip bg-color">锁</span>
                                 </a>
                             
                         </div>
@@ -705,17 +725,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/28/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86%E6%95%B4%E5%90%88/">
+                <a href="/KendricW.github.io/2024/03/31/Mysql%E9%94%81/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="其他知识整合">
+                        <img src="/KendricW.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="Mysql锁">
                         
-                        <span class="card-title">其他知识整合</span>
+                        <span class="card-title">Mysql锁</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -725,9 +746,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-31
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -740,11 +761,16 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/%E9%9D%A2%E8%AF%95/">
-                        <span class="chip bg-color">面试</span>
+                    <a href="/KendricW.github.io/tags/Mysql/">
+                        <span class="chip bg-color">Mysql</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E9%94%81/">
+                        <span class="chip bg-color">锁</span>
                     </a>
                     
                 </div>
@@ -758,13 +784,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/03/28/Mysql%E9%9D%A2%E8%AF%95/">
+                <a href="/KendricW.github.io/2024/03/28/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86%E6%95%B4%E5%90%88/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/19.jpg" class="responsive-img" alt="Mysql面试">
+                        <img src="/KendricW.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="其他知识整合">
                         
-                        <span class="card-title">Mysql面试</span>
+                        <span class="card-title">其他知识整合</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -794,10 +820,6 @@
                     
                     <a href="/KendricW.github.io/tags/%E9%9D%A2%E8%AF%95/">
                         <span class="chip bg-color">面试</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/Mysql/">
-                        <span class="chip bg-color">Mysql</span>
                     </a>
                     
                 </div>
