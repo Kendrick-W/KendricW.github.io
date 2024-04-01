@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="其他知识整合, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="基础知识整合, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>其他知识整合 | Kendrick_W&#39;s Blog</title>
+    <title>基础知识整合 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">其他知识整合</h1>
+                    <h1 class="description center-align post-title">基础知识整合</h1>
                 </div>
             </div>
         </div>
@@ -463,21 +463,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-03-31
+                    2024-04-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    238
+                    1.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    4 Min
                 </div>
                 
 
@@ -497,7 +497,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="其他知识整合"><a href="#其他知识整合" class="headerlink" title="其他知识整合"></a>其他知识整合</h1><h2 id="Lua脚本是干什么的"><a href="#Lua脚本是干什么的" class="headerlink" title="Lua脚本是干什么的"></a>Lua脚本是干什么的</h2><ul>
+                <h1 id="基础知识整合"><a href="#基础知识整合" class="headerlink" title="基础知识整合"></a>基础知识整合</h1><h2 id="Lua脚本是干什么的"><a href="#Lua脚本是干什么的" class="headerlink" title="Lua脚本是干什么的"></a>Lua脚本是干什么的</h2><ul>
 <li>Redis等数据库系统支持使用Lua编写脚本直接在数据库内部执行，这样可以实现原子操作，减少网络延迟，并且能够替代或者增强原生的事务处理功能。</li>
 <li>Lua 可替代 XML、INI 等传统配置文件格式，提供更丰富的配置选项和运行时计算能力。</li>
 </ul>
@@ -508,6 +508,55 @@
 <h2 id="Dubbo与Spring-Cloud有什么区别？"><a href="#Dubbo与Spring-Cloud有什么区别？" class="headerlink" title="Dubbo与Spring Cloud有什么区别？"></a>Dubbo与Spring Cloud有什么区别？</h2><p>Dubbo最初是一个RPC框架，但现在已经发展成为一个微服务框架，在RPC方面，Dubbo在性能和扩展性方面表现出色，支持HTTP2和GRPC。</p>
 <p>而Spring Cloud整个生态系统方面更完善，但Dubbo的生态也在不断发展，Dubbo支持云原生相关功能，而Spring Cloud也在朝这个方向发展。</p>
 <p>在组件版本管理方面，Dubbo更方便。</p>
+<hr>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><h3 id="什么是死锁？"><a href="#什么是死锁？" class="headerlink" title="什么是死锁？"></a>什么是死锁？</h3><p>多个进程&#x2F;线程同时被阻塞，他们中的一个或者全部都在等某个资源被释放。由于进程&#x2F;线程被无限期地阻塞，因此程序不可能正常终止</p>
+<h3 id="死锁案例"><a href="#死锁案例" class="headerlink" title="死锁案例"></a>死锁案例</h3><p>假设有两个进程 A 和 B，以及两个资源 X 和 Y，它们的分配情况如下：</p>
+<table>
+<thead>
+<tr>
+<th>进程</th>
+<th>占用资源</th>
+<th>需求资源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>X</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Y</td>
+<td>X</td>
+</tr>
+</tbody></table>
+<p>此时，进程 A 占用资源 X 并且请求资源 Y，而进程 B 已经占用了资源 Y 并请求资源 X。两个进程都在等待对方释放资源，无法继续执行，陷入了死锁状态。</p>
+<h3 id="产生死锁的四个必要条件"><a href="#产生死锁的四个必要条件" class="headerlink" title="产生死锁的四个必要条件"></a>产生死锁的四个必要条件</h3><ol>
+<li><strong>互斥</strong>：资源必须处于非共享模式，即一次只有一个进程可以使用</li>
+<li><strong>占有并等待</strong>：一个进程至少应该占有一个资源，并等待另一资源，而该资源被其他进程所占有</li>
+<li><strong>非抢占</strong>：资源不能被抢占</li>
+<li><strong>循环等待</strong>：有一组等待进程 <code>&#123;P0, P1,..., Pn&#125;</code>， <code>P0</code> 等待的资源被 <code>P1</code> 占有，<code>P1</code> 等待的资源被 <code>P2</code> 占有，……，<code>Pn-1</code> 等待的资源被 <code>Pn</code> 占有，<code>Pn</code> 等待的资源被 <code>P0</code> 占有。</li>
+</ol>
+<p><strong>注意 ⚠️</strong>：这四个条件是产生死锁的 <strong>必要条件</strong> ，也就是说只要系统发生死锁，这些条件必然成立，而只要上述条件之一不满足，就不会发生死锁。</p>
+<h3 id="解决死锁的方法"><a href="#解决死锁的方法" class="headerlink" title="解决死锁的方法"></a>解决死锁的方法</h3><ul>
+<li><p><strong>预防</strong> 是采用某种策略，<strong>限制并发进程对资源的请求</strong>，从而使得死锁的必要条件在系统执行的任何时间上都不满足。</p>
+</li>
+<li><p><strong>避免</strong>则是系统在分配资源时，根据资源的使用情况<strong>提前做出预测</strong>，从而<strong>避免死锁的发生</strong></p>
+</li>
+<li><p><strong>检测</strong>是指系统设有<strong>专门的机构</strong>，当死锁发生时，该机构能够检测死锁的发生，并精确地确定与死锁有关的进程和资源。</p>
+</li>
+<li><p><strong>解除</strong> 是与检测相配套的一种措施，用于<strong>将进程从死锁状态下解脱出来</strong></p>
+</li>
+</ul>
+<h3 id="死锁的预防"><a href="#死锁的预防" class="headerlink" title="死锁的预防"></a>死锁的预防</h3><p>破坏第一个条件 <strong>互斥条件</strong>：使得资源是可以同时访问的，这是种简单的方法，磁盘就可以用这种方法管理，但是我们要知道，有很多资源 <strong>往往是不能同时访问的</strong> ，所以这种做法在大多数的场合是行不通的。</p>
+<p>破坏第三个条件 <strong>非抢占</strong>：也就是说可以采用 <strong>剥夺式调度算法</strong>，但剥夺式调度方法目前一般仅适用于 <strong>主存资源</strong> 和 <strong>处理器资源</strong> 的分配，并不适用于所有的资源，会导致 <strong>资源利用率下降</strong>。</p>
+<p>所以一般比较实用的 <strong>预防死锁的方法</strong>，是通过考虑破坏第二个条件和第四个条件。</p>
+<p><strong>1、静态分配策略</strong></p>
+<p>静态分配策略可以破坏死锁产生的第二个条件（占有并等待）。所谓静态分配策略，就是指一个进程必须在执行前就申请到它所需要的全部资源，并且知道它所要的资源都得到满足之后才开始执行。进程要么占有所有的资源然后开始执行，要么不占有资源，不会出现占有一些资源等待一些资源的情况。</p>
+<p>静态分配策略逻辑简单，实现也很容易，但这种策略 <strong>严重地降低了资源利用率</strong>，因为在每个进程所占有的资源中，有些资源是在比较靠后的执行时间里采用的，甚至有些资源是在额外的情况下才使用的，这样就可能造成一个进程占有了一些 <strong>几乎不用的资源而使其他需要该资源的进程产生等待</strong> 的情况。</p>
+<p><strong>2、层次分配策略</strong></p>
+<p>层次分配策略破坏了产生死锁的第四个条件(循环等待)。在层次分配策略下，所有的资源被分成了多个层次，一个进程得到某一次的一个资源后，它只能再申请较高一层的资源；当一个进程要释放某层的一个资源时，必须先释放所占用的较高层的资源，按这种策略，是不可能出现循环等待链的，因为那样的话，就出现了已经申请了较高层的资源，反而去申请了较低层的资源，不符合层次分配策略。</p>
+<hr>
 
                 
             </div>
@@ -644,8 +693,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/%E9%9D%A2%E8%AF%95/" class="post-category">
-                                    面试
+                            <a href="/KendricW.github.io/categories/Mysql/" class="post-category">
+                                    Mysql
                                 </a>
                             
                             
@@ -697,8 +746,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/%E9%9D%A2%E8%AF%95/" class="post-category">
-                                    面试
+                            <a href="/KendricW.github.io/categories/JAVA/" class="post-category">
+                                    JAVA
                                 </a>
                             
                             
@@ -916,7 +965,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">27.4k</span>&nbsp;字
+                class="white-color">28.5k</span>&nbsp;字
             
             
             
