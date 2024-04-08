@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="基础知识整合, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="面试知识整合, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>基础知识整合 | Kendrick_W&#39;s Blog</title>
+    <title>面试知识整合 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">基础知识整合</h1>
+                    <h1 class="description center-align post-title">面试知识整合</h1>
                 </div>
             </div>
         </div>
@@ -463,21 +463,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-04-01
+                    2024-04-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.4k
+                    2.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    4 Min
+                    8 Min
                 </div>
                 
 
@@ -497,12 +497,12 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="基础知识整合"><a href="#基础知识整合" class="headerlink" title="基础知识整合"></a>基础知识整合</h1><h2 id="Lua脚本是干什么的"><a href="#Lua脚本是干什么的" class="headerlink" title="Lua脚本是干什么的"></a>Lua脚本是干什么的</h2><ul>
+                <h1 id="面试知识整合"><a href="#面试知识整合" class="headerlink" title="面试知识整合"></a>面试知识整合</h1><h2 id="Lua脚本是干什么的"><a href="#Lua脚本是干什么的" class="headerlink" title="Lua脚本是干什么的"></a>Lua脚本是干什么的</h2><ul>
 <li>Redis等数据库系统支持使用Lua编写脚本直接在数据库内部执行，这样可以实现原子操作，减少网络延迟，并且能够替代或者增强原生的事务处理功能。</li>
 <li>Lua 可替代 XML、INI 等传统配置文件格式，提供更丰富的配置选项和运行时计算能力。</li>
 </ul>
 <hr>
-<h2 id="布隆过滤器怎么实现的"><a href="#布隆过滤器怎么实现的" class="headerlink" title="布隆过滤器怎么实现的"></a>布隆过滤器怎么实现的</h2><hr>
+<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><hr>
 <h2 id="虚拟线程"><a href="#虚拟线程" class="headerlink" title="虚拟线程"></a>虚拟线程</h2><hr>
 <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><hr>
 <h2 id="Dubbo与Spring-Cloud有什么区别？"><a href="#Dubbo与Spring-Cloud有什么区别？" class="headerlink" title="Dubbo与Spring Cloud有什么区别？"></a>Dubbo与Spring Cloud有什么区别？</h2><p>Dubbo最初是一个RPC框架，但现在已经发展成为一个微服务框架，在RPC方面，Dubbo在性能和扩展性方面表现出色，支持HTTP2和GRPC。</p>
@@ -556,6 +556,57 @@
 <p>静态分配策略逻辑简单，实现也很容易，但这种策略 <strong>严重地降低了资源利用率</strong>，因为在每个进程所占有的资源中，有些资源是在比较靠后的执行时间里采用的，甚至有些资源是在额外的情况下才使用的，这样就可能造成一个进程占有了一些 <strong>几乎不用的资源而使其他需要该资源的进程产生等待</strong> 的情况。</p>
 <p><strong>2、层次分配策略</strong></p>
 <p>层次分配策略破坏了产生死锁的第四个条件(循环等待)。在层次分配策略下，所有的资源被分成了多个层次，一个进程得到某一次的一个资源后，它只能再申请较高一层的资源；当一个进程要释放某层的一个资源时，必须先释放所占用的较高层的资源，按这种策略，是不可能出现循环等待链的，因为那样的话，就出现了已经申请了较高层的资源，反而去申请了较低层的资源，不符合层次分配策略。</p>
+<hr>
+<h2 id="谈谈你对AQS的理解"><a href="#谈谈你对AQS的理解" class="headerlink" title="谈谈你对AQS的理解"></a>谈谈你对AQS的理解</h2><p>AQS是多线程同步器，它是JUC包中多个组件的底层实现，如 Lock、CountDownLatch、Semaphore 等都用到了 AQS</p>
+<p>从本质上来说，AQS 提供了两种锁机制，分别是<strong>排它锁</strong>，和 <strong>共享锁</strong>。</p>
+<p><strong>排它锁</strong>，就是存在多线程竞争同一共享资源时，同一时刻只允许一个线程访问该共享资源，也就是多个线程中只能有一个线程获得锁资源，比如Lock中的ReentrantLock<strong>重入锁</strong>实现就是用到了AQS中的排它锁功能。</p>
+<p><strong>共享锁</strong>也称为读锁，就是在同一时刻允许多个线程同时获得锁资源，比如CountDownLatch和Semaphore都是用到了AQS中的共享锁功能。</p>
+<hr>
+<h2 id="fail-safe机制与fail-fast机制分别有什么作用"><a href="#fail-safe机制与fail-fast机制分别有什么作用" class="headerlink" title="fail-safe机制与fail-fast机制分别有什么作用"></a>fail-safe机制与fail-fast机制分别有什么作用</h2><p>fail-safe和fail-fast，是多线程并发操作集合时的一种失败处理机制。</p>
+<h3 id="Fail-fast"><a href="#Fail-fast" class="headerlink" title="Fail-fast"></a>Fail-fast</h3><p> 表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻ConcurrentModificationException 异常，从而导致遍历失败。</p>
+<p>定义一个 Map 集合，使用 Iterator 迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生 fail-fast。</p>
+<p>java.util 包下的集合类都是快速失败机制的, 常见的的使用 fail-fast 方式遍历的容器有HashMap 和 ArrayList 等</p>
+<h3 id="Fail-safe"><a href="#Fail-safe" class="headerlink" title="Fail-safe"></a>Fail-safe</h3><p>表示失败安全，也就是在这种机制下，出现集合元素的修改，不会抛出ConcurrentModificationException。</p>
+<p>原因是采用安全失败机制的集合容器，在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，</p>
+<p>在拷贝的集合上进行遍历。由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到定义了一个 CopyOnWriteArrayList，在对这个集合遍历过程中，对集合元素做修改后，不会抛出异常，但同时也不会打印出增加的元素。</p>
+<p>java.util.concurrent 包下的容器都是安全失败的,可以在多线程下并发使用,并发修改。常见的的使用 fail-safe 方式遍历的容器有 ConcerrentHashMap 和CopyOnWriteArrayList 等。</p>
+<hr>
+<h3 id="谈谈你对-Seata-的理解"><a href="#谈谈你对-Seata-的理解" class="headerlink" title="谈谈你对 Seata 的理解"></a>谈谈你对 Seata 的理解</h3><hr>
+<h3 id="Spring-Boot-的约定优于配置，你的理解是什么？"><a href="#Spring-Boot-的约定优于配置，你的理解是什么？" class="headerlink" title="Spring Boot 的约定优于配置，你的理解是什么？"></a>Spring Boot 的约定优于配置，你的理解是什么？</h3><ol>
+<li><p>首先， 约定优于配置是一种软件设计的范式，它的核心思想是减少软件开发人员对于配置项的维护，从而让开发人员更加聚焦在业务逻辑上。</p>
+</li>
+<li><p>Spring Boot 就是约定优于配置这一理念下的产物，它类似于 Spring 框架下的一个脚手架，通过 Spring Boot，我们可以快速开发基于 Spring 生态下的应用程序。</p>
+</li>
+<li><p>基于传统的 Spring 框架开发 web 应用，我们需要做很多和业务开发无关并且只需要做一次的配置，比如</p>
+<ul>
+<li><p>管理 jar 包依赖</p>
+</li>
+<li><p>web.xml 维护</p>
+</li>
+<li><p>Dispatch-Servlet.xml 配置项维护</p>
+</li>
+<li><p>应用部署到 Web 容器</p>
+</li>
+<li><p>第三方组件集成到 Spring IOC 容器中的配置项维护</p>
+</li>
+</ul>
+<p>而在 Spring Boot 中，我们不需要再去做这些繁琐的配置，Spring Boot 已经自动帮我</p>
+<p>们完成了，这就是约定优于配置思想的体现。</p>
+</li>
+<li><p>Spring Boot 约定由于配置的体现有很多，比如</p>
+<ul>
+<li>Spring Boot Starter 启动依赖，它能帮我们管理所有 jar 包版本</li>
+<li>如果当前应用依赖了 spring mvc 相关的 jar，那么 Spring Boot 会自动内置Tomcat 容器来运行 web 应用，我们不需要再去单独做应用部署。</li>
+<li>Spring Boot 的自动装配机制的实现中，通过扫描约定路径下的spring.factories 文件来识别配置类，实现 Bean 的自动装配。</li>
+<li>默认加载的配置文件 application.properties yml yaml等等。</li>
+</ul>
+<p>总的来说，约定优于配置是一个比较常见的软件设计思想，它的核心本质都是为了更高效以及更便捷的实现软件系统的开发和维护。</p>
+</li>
+</ol>
+<hr>
+<h2 id="kafka-的零拷贝原理"><a href="#kafka-的零拷贝原理" class="headerlink" title="kafka 的零拷贝原理"></a>kafka 的零拷贝原理</h2><hr>
+<h2 id="innoDB-如何解决幻读"><a href="#innoDB-如何解决幻读" class="headerlink" title="innoDB 如何解决幻读"></a>innoDB 如何解决幻读</h2><hr>
+<h2 id="lock-和-synchronized-区别"><a href="#lock-和-synchronized-区别" class="headerlink" title="lock 和 synchronized 区别"></a>lock 和 synchronized 区别</h2><h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>Lock 和 Synchronized 都是 Java 中用来解决线程安全问题的工具。</p>
 <hr>
 
                 
@@ -965,7 +1016,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">28.5k</span>&nbsp;字
+                class="white-color">34.3k</span>&nbsp;字
             
             
             

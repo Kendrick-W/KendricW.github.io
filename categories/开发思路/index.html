@@ -380,11 +380,11 @@
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/Mysql/" title="Mysql: 2">
+                <a href="/KendricW.github.io/categories/Mysql/" title="Mysql: 3">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
                             style="background-color: #D5F5E3;">Mysql
-                        <span class="tag-length">2</span>
+                        <span class="tag-length">3</span>
                     </span>
                 </a>
                 
@@ -398,20 +398,20 @@
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" title="开发思路: 5">
+                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" title="开发思路: 7">
                     <span class="chip center-align waves-effect waves-light
                              chip-active "
                             style="background-color: #FEF9E7;">开发思路
-                        <span class="tag-length">5</span>
+                        <span class="tag-length">7</span>
                     </span>
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/LeetCode/" title="LeetCode: 2">
+                <a href="/KendricW.github.io/categories/%E9%9D%A2%E8%AF%95/" title="面试: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8F9F9;">LeetCode
-                        <span class="tag-length">2</span>
+                            style="background-color: #F8F9F9;">面试
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
@@ -425,11 +425,11 @@
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/%E9%9D%A2%E8%AF%95/" title="面试: 1">
+                <a href="/KendricW.github.io/categories/LeetCode/" title="LeetCode: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D7BDE2;">面试
-                        <span class="tag-length">1</span>
+                            style="background-color: #D7BDE2;">LeetCode
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -453,6 +453,120 @@
 
     <article id="articles" class="container articles">
         <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/KendricW.github.io/2024/04/09/%E4%BA%92%E6%96%A5%E9%94%81%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/KendricW.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="互斥锁解决缓存击穿问题">
+                            
+                            <span class="card-title">互斥锁解决缓存击穿问题</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                互斥锁解决缓存击穿问题核心思路相较于原来重缓存中查询不到数据后直接查询数据库而言，现在的方案是进行查询后，如果缓存没有查询到数据，则进行互斥锁的的获取，获取互斥锁后，判断是否获得了锁，如果没有获得到，则休眠，过一会儿再尝试查询，直到获取锁为
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-09
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/KendricW.github.io/tags/Redis/">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
+                            <span class="chip bg-color">缓存击穿</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
+                            <span class="chip bg-color">互斥锁</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/KendricW.github.io/2024/04/07/%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/KendricW.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="短信登录及状态更新">
+                            
+                            <span class="card-title">短信登录及状态更新</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                短信登录及状态更新基于 Session 实现登录流程发送验证码：
+用户在提交手机号后，会校验手机号是否合法，如果不合法，则要求用户重新输入手机号
+如果手机号合法，后台此时生成对应的验证码，同时将验证码进行保存，然后再通过短信的方式将验证码发
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-07
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/KendricW.github.io/tags/Redis/">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E7%99%BB%E5%BD%95/">
+                            <span class="chip bg-color">登录</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E7%9F%AD%E4%BF%A1/">
+                            <span class="chip bg-color">短信</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0/">
+                            <span class="chip bg-color">状态更新</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -788,7 +902,7 @@ Cont
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">28.5k</span>&nbsp;字
+                class="white-color">34.3k</span>&nbsp;字
             
             
             
