@@ -514,6 +514,7 @@
             <div id="articleContent">
                 <h1 id="逻辑过期解决缓存击穿问题"><a href="#逻辑过期解决缓存击穿问题" class="headerlink" title="逻辑过期解决缓存击穿问题"></a>逻辑过期解决缓存击穿问题</h1><p><strong>需求：修改根据id查询商铺的业务，基于逻辑过期方式来解决缓存击穿问题</strong></p>
 <p>思路分析：当用户开始查询redis时，判断是否命中，如果没有命中则直接返回空数据，不查询数据库，而一旦命中后，将value取出，判断value中的过期时间是否满足，如果没有过期，则直接返回redis中的数据，如果过期，则在开启独立线程后直接返回之前的数据，独立线程去重构数据，重构完成后释放互斥锁。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/10/d02db922b6ace937.png"></p>
 <h2 id="步骤一"><a href="#步骤一" class="headerlink" title="步骤一"></a>步骤一</h2><p>新建一个实体类，对原来到吗没有侵入性。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisData</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> LocalDateTime expireTime;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

@@ -471,7 +471,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-04-09
+                    2024-04-10
                 </div>
                 
 
@@ -510,6 +510,7 @@
             <div id="articleContent">
                 <h1 id="互斥锁解决缓存击穿问题"><a href="#互斥锁解决缓存击穿问题" class="headerlink" title="互斥锁解决缓存击穿问题"></a>互斥锁解决缓存击穿问题</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>相较于原来重缓存中查询不到数据后直接查询数据库而言，现在的方案是进行查询后，如果缓存没有查询到数据，则进行互斥锁的的获取，获取互斥锁后，判断是否获得了锁，如果没有获得到，则休眠，过一会儿再尝试查询，直到获取锁为止，才能进行查询。</p>
 <p>如果获取到了锁的线程，再去进行查询，查询后将数据写入redis，再释放锁，返回数据，利用互斥锁就能保证只有一个线程去执行操作数据库的逻辑，防止缓存击穿</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/10/1f54c2b678abb6e1.png"></p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>核心思路就是利用redis的setnx方法来表示获取锁，该方法含义是redis中如果没有这个key，则插入成功，返回1，在stringRedisTemplate中返回true，  如果有这个key则插入失败，则返回0，在stringRedisTemplate返回false，我们可以通过true，或者是false，来表示是否有线程成功插入key，成功插入的key的线程我们认为他就是获得到锁的线程。</p>
 <p>操作锁的代码：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">flag</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(key, <span class="string">&quot;1&quot;</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> BooleanUtil.isTrue(flag);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    stringRedisTemplate.delete(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
