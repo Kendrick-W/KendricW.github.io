@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="互斥锁解决缓存击穿问题, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="Redis分布式锁, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>互斥锁解决缓存击穿问题 | Kendrick_W&#39;s Blog</title>
+    <title>Redis分布式锁 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">互斥锁解决缓存击穿问题</h1>
+                    <h1 class="description center-align post-title">Redis分布式锁</h1>
                 </div>
             </div>
         </div>
@@ -435,12 +435,8 @@
                                 <span class="chip bg-color">Redis</span>
                             </a>
                         
-                            <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
-                                <span class="chip bg-color">缓存击穿</span>
-                            </a>
-                        
-                            <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
-                                <span class="chip bg-color">互斥锁</span>
+                            <a href="/KendricW.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                                <span class="chip bg-color">分布式锁</span>
                             </a>
                         
                     </div>
@@ -464,28 +460,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-04-09
+                    2024-04-10
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-04-10
+                    2024-04-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    567
+                    3.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    2 Min
+                    12 Min
                 </div>
                 
 
@@ -508,17 +504,137 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="互斥锁解决缓存击穿问题"><a href="#互斥锁解决缓存击穿问题" class="headerlink" title="互斥锁解决缓存击穿问题"></a>互斥锁解决缓存击穿问题</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>相较于原来重缓存中查询不到数据后直接查询数据库而言，现在的方案是进行查询后，如果缓存没有查询到数据，则进行互斥锁的的获取，获取互斥锁后，判断是否获得了锁，如果没有获得到，则休眠，过一会儿再尝试查询，直到获取锁为止，才能进行查询。</p>
-<p>如果获取到了锁的线程，再去进行查询，查询后将数据写入redis，再释放锁，返回数据，利用互斥锁就能保证只有一个线程去执行操作数据库的逻辑，防止缓存击穿</p>
-<p><img src="https://s3.bmp.ovh/imgs/2024/04/10/1f54c2b678abb6e1.png"></p>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>核心思路就是利用redis的setnx方法来表示获取锁，该方法含义是redis中如果没有这个key，则插入成功，返回1，在stringRedisTemplate中返回true，  如果有这个key则插入失败，则返回0，在stringRedisTemplate返回false，我们可以通过true，或者是false，来表示是否有线程成功插入key，成功插入的key的线程我们认为他就是获得到锁的线程。</p>
-<p>操作锁的代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">flag</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(key, <span class="string">&quot;1&quot;</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> BooleanUtil.isTrue(flag);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    stringRedisTemplate.delete(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                <h1 id="Redis分布式锁"><a href="#Redis分布式锁" class="headerlink" title="Redis分布式锁"></a>Redis分布式锁</h1><h2 id="基本原理和实现方式对比"><a href="#基本原理和实现方式对比" class="headerlink" title="基本原理和实现方式对比"></a>基本原理和实现方式对比</h2><p>分布式锁：满足分布式系统或集群模式下多进程可见并且互斥的锁。</p>
+<p>分布式锁的核心思想就是让大家都使用同一把锁，只要大家使用的是同一把锁，那么我们就能锁住线程，不让线程进行，让程序串行执行，这就是分布式锁的核心思路</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/15/8e5a532b0b44e803.png"></p>
+<h2 id="分布式锁应该满足哪些条件？"><a href="#分布式锁应该满足哪些条件？" class="headerlink" title="分布式锁应该满足哪些条件？"></a>分布式锁应该满足哪些条件？</h2><ul>
+<li>可见性：多个线程都能看到相同的结果<ul>
+<li>注意：这个地方说的可见性并不是并发编程中指的内存可见性，只是说多个线程之间都能感知到变化的意思</li>
+</ul>
+</li>
+<li>互斥：互斥是分布式锁的最基本的条件，使得程序串行执行</li>
+<li>高可用：程序不易崩溃，时时刻刻到保证较高的可用性</li>
+<li>高性能：加锁会让性能降低，所有对于分布式锁本身需要他就较高的加锁性能和释放锁性能</li>
+<li>安全性：安全是必不可少的一环</li>
+</ul>
+<h2 id="常见的分布式锁"><a href="#常见的分布式锁" class="headerlink" title="常见的分布式锁"></a>常见的分布式锁</h2><ul>
+<li><p>Mysql：mysql本身就带有锁机制，但是由于mysql性能本身一般，所以采用分布式锁的情况下，其实使用mysql作为分布式锁比较少见</p>
+</li>
+<li><p>Redis：redis作为分布式锁是非常常见的一种使用方式，现在企业级开发中基本都使用redis或者zookeeper作为分布式锁，利用setnx这个方法，如果插入key成功，则表示获得到了锁，如果有人插入成功，其他人插入失败则表示无法获得到锁，利用这套逻辑来实现分布式锁</p>
+</li>
+<li><p>Zookeeper：zookeeper也是企业级开发中较好的一个实现分布式锁的方案</p>
+</li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/15/5dc30fa93f28f484.png"></p>
+<h2 id="Redis分布式锁的实现核心思路"><a href="#Redis分布式锁的实现核心思路" class="headerlink" title="Redis分布式锁的实现核心思路"></a>Redis分布式锁的实现核心思路</h2><p>实现分布式锁时需要实现的两个基本方法</p>
+<ul>
+<li><p>获取锁：</p>
+<ul>
+<li>互斥：确保只能有一个线程获取锁</li>
+<li>非阻塞：尝试一次，成功返回true，失败返回false</li>
+</ul>
+</li>
+<li><p>释放锁：</p>
+<ul>
+<li>手动释放</li>
+<li>超时释放：获取锁时添加一个超时时间</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//释放锁，删除即可</span><br><span class="line">DEL key</span><br></pre></td></tr></table></figure>
 
-<p><strong>操作代码：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Shop <span class="title function_">queryWithMutex</span><span class="params">(Long id)</span>  &#123;</span><br><span class="line">       <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> CACHE_SHOP_KEY + id;</span><br><span class="line">       <span class="comment">// 1、从redis中查询商铺缓存</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">shopJson</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().get(<span class="string">&quot;key&quot;</span>);</span><br><span class="line">       <span class="comment">// 2、判断是否存在</span></span><br><span class="line">       <span class="keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;</span><br><span class="line">           <span class="comment">// 存在,直接返回</span></span><br><span class="line">           <span class="keyword">return</span> JSONUtil.toBean(shopJson, Shop.class);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//判断命中的值是否是空值</span></span><br><span class="line">       <span class="keyword">if</span> (shopJson != <span class="literal">null</span>) &#123;</span><br><span class="line">           <span class="comment">//返回一个错误信息</span></span><br><span class="line">           <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 4.实现缓存重构</span></span><br><span class="line">       <span class="comment">//4.1 获取互斥锁</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">lockKey</span> <span class="operator">=</span> <span class="string">&quot;lock:shop:&quot;</span> + id;</span><br><span class="line">       <span class="type">Shop</span> <span class="variable">shop</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> tryLock(lockKey);</span><br><span class="line">           <span class="comment">// 4.2 判断否获取成功</span></span><br><span class="line">           <span class="keyword">if</span>(!isLock)&#123;</span><br><span class="line">               <span class="comment">//4.3 失败，则休眠重试</span></span><br><span class="line">               Thread.sleep(<span class="number">50</span>);</span><br><span class="line">               <span class="keyword">return</span> queryWithMutex(id);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//4.4 成功，根据id查询数据库</span></span><br><span class="line">            shop = getById(id);</span><br><span class="line">           <span class="comment">// 5.不存在，返回错误</span></span><br><span class="line">           <span class="keyword">if</span>(shop == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="comment">//将空值写入redis</span></span><br><span class="line">               stringRedisTemplate.opsForValue().set(key,<span class="string">&quot;&quot;</span>,CACHE_NULL_TTL,TimeUnit.MINUTES);</span><br><span class="line">               <span class="comment">//返回错误信息</span></span><br><span class="line">               <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//6.写入redis</span></span><br><span class="line">           stringRedisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(shop),CACHE_NULL_TTL,TimeUnit.MINUTES);</span><br><span class="line"></span><br><span class="line">       &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">finally</span> &#123;</span><br><span class="line">           <span class="comment">//7.释放互斥锁</span></span><br><span class="line">           unlock(lockKey);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> shop;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h3><p>利用redis 的setNx 方法，当有多个线程进入时，我们就利用该方法，第一个线程进入时，redis 中就有这个key 了，返回了1，如果结果是1，则表示他抢到了锁，那么他去执行业务，然后再删除锁，退出锁逻辑，没有抢到锁的线程，等待一定时间后重试即可</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/16/d0d331b07f4cc163.png"></p>
+<h3 id="实现分布式锁代码实现"><a href="#实现分布式锁代码实现" class="headerlink" title="实现分布式锁代码实现"></a>实现分布式锁代码实现</h3><p><strong>SimpleRedisLock</strong></p>
+<p>利用setnx方法进行加锁，同时增加过期时间，防止死锁，此方法可以保证加锁和增加过期时间具有原子性</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY_PREFIX=<span class="string">&quot;lock:&quot;</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(<span class="type">long</span> timeoutSec)</span> &#123;</span><br><span class="line">    <span class="comment">// 获取线程标示</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">threadId</span> <span class="operator">=</span> Thread.currentThread().getId()</span><br><span class="line">    <span class="comment">// 获取锁</span></span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">success</span> <span class="operator">=</span> stringRedisTemplate.opsForValue()</span><br><span class="line">            .setIfAbsent(KEY_PREFIX + name, threadId + <span class="string">&quot;&quot;</span>, timeoutSec, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> Boolean.TRUE.equals(success);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+<ul>
+<li>释放锁逻辑</li>
+</ul>
+<p>SimpleRedisLock</p>
+<p>释放锁，防止删除别人的锁</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//通过del删除锁</span></span><br><span class="line">    stringRedisTemplate.delete(KEY_PREFIX + name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改业务代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">      <span class="comment">// 1.查询优惠券</span></span><br><span class="line">      <span class="type">SeckillVoucher</span> <span class="variable">voucher</span> <span class="operator">=</span> seckillVoucherService.getById(voucherId);</span><br><span class="line">      <span class="comment">// 2.判断秒杀是否开始</span></span><br><span class="line">      <span class="keyword">if</span> (voucher.getBeginTime().isAfter(LocalDateTime.now())) &#123;</span><br><span class="line">          <span class="comment">// 尚未开始</span></span><br><span class="line">          <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀尚未开始！&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 3.判断秒杀是否已经结束</span></span><br><span class="line">      <span class="keyword">if</span> (voucher.getEndTime().isBefore(LocalDateTime.now())) &#123;</span><br><span class="line">          <span class="comment">// 尚未开始</span></span><br><span class="line">          <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀已经结束！&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 4.判断库存是否充足</span></span><br><span class="line">      <span class="keyword">if</span> (voucher.getStock() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">          <span class="comment">// 库存不足</span></span><br><span class="line">          <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">      <span class="comment">//创建锁对象(新增代码)</span></span><br><span class="line">      <span class="type">SimpleRedisLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleRedisLock</span>(<span class="string">&quot;order:&quot;</span> + userId, stringRedisTemplate);</span><br><span class="line">      <span class="comment">//获取锁对象</span></span><br><span class="line">      <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> lock.tryLock(<span class="number">1200</span>);</span><br><span class="line"><span class="comment">//加锁失败</span></span><br><span class="line">      <span class="keyword">if</span> (!isLock) &#123;</span><br><span class="line">          <span class="keyword">return</span> Result.fail(<span class="string">&quot;不允许重复下单&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="comment">//获取代理对象(事务)</span></span><br><span class="line">          <span class="type">IVoucherOrderService</span> <span class="variable">proxy</span> <span class="operator">=</span> (IVoucherOrderService) AopContext.currentProxy();</span><br><span class="line">          <span class="keyword">return</span> proxy.createVoucherOrder(voucherId);</span><br><span class="line">      &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">          <span class="comment">//释放锁</span></span><br><span class="line">          lock.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Redis分布式锁误删情况说明"><a href="#Redis分布式锁误删情况说明" class="headerlink" title="Redis分布式锁误删情况说明"></a>Redis分布式锁误删情况说明</h2><p>逻辑说明：</p>
+<p>持有锁的线程在锁的内部出现了阻塞，导致他的锁自动释放，这时其他线程，线程2来尝试获得锁，就拿到了这把锁，然后线程2在持有锁执行过程中，线程1反应过来，继续执行，而线程1执行过程中，走到了删除锁逻辑，此时就会把本应该属于线程2的锁进行删除，这就是误删别人锁的情况说明</p>
+<p>解决方案：解决方案就是在每个线程释放锁的时候，去判断一下当前这把锁是否属于自己，如果属于自己，则不进行锁的删除，假设还是上边的情况，线程1卡顿，锁自动释放，线程2进入到锁的内部执行逻辑，此时线程1反应过来，然后删除锁，但是线程1，一看当前这把锁不是属于自己，于是不进行删除锁逻辑，当线程2走到删除锁逻辑时，如果没有卡过自动释放锁的时间点，则判断当前这把锁是属于自己的，于是删除这把锁。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/16/635d3f26c234b05b.png"></p>
+<h2 id="解决Redis分布式锁误删问题"><a href="#解决Redis分布式锁误删问题" class="headerlink" title="解决Redis分布式锁误删问题"></a>解决Redis分布式锁误删问题</h2><p>需求：修改之前的分布式锁实现，满足：在获取锁时存入线程标示（可以用UUID表示）<br>在释放锁时先获取锁中的线程标示，判断是否与当前线程标示一致</p>
+<ul>
+<li>如果一致则释放锁</li>
+<li>如果不一致则不释放锁</li>
+</ul>
+<p>核心逻辑：在存入锁时，放入自己线程的标识，在删除锁时，判断当前这把锁的标识是不是自己存入的，如果是，则进行删除，如果不是，则不进行删除。</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/16/6a78ac9d0a611ef4.png"></p>
+<p>具体代码如下：加锁</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ID_PREFIX</span> <span class="operator">=</span> UUID.randomUUID().toString(<span class="literal">true</span>) + <span class="string">&quot;-&quot;</span>;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(<span class="type">long</span> timeoutSec)</span> &#123;</span><br><span class="line">   <span class="comment">// 获取线程标示</span></span><br><span class="line">   <span class="type">String</span> <span class="variable">threadId</span> <span class="operator">=</span> ID_PREFIX + Thread.currentThread().getId();</span><br><span class="line">   <span class="comment">// 获取锁</span></span><br><span class="line">   <span class="type">Boolean</span> <span class="variable">success</span> <span class="operator">=</span> stringRedisTemplate.opsForValue()</span><br><span class="line">                .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);</span><br><span class="line">   <span class="keyword">return</span> Boolean.TRUE.equals(success);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>释放锁</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 获取线程标示</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">threadId</span> <span class="operator">=</span> ID_PREFIX + Thread.currentThread().getId();</span><br><span class="line">    <span class="comment">// 获取锁中的标示</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">id</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().get(KEY_PREFIX + name);</span><br><span class="line">    <span class="comment">// 判断标示是否一致</span></span><br><span class="line">    <span class="keyword">if</span>(threadId.equals(id)) &#123;</span><br><span class="line">        <span class="comment">// 释放锁</span></span><br><span class="line">        stringRedisTemplate.delete(KEY_PREFIX + name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分布式锁的原子性问题"><a href="#分布式锁的原子性问题" class="headerlink" title="分布式锁的原子性问题"></a>分布式锁的原子性问题</h2><p>更为极端的误删逻辑说明：</p>
+<p>线程1现在持有锁之后，在执行业务逻辑过程中，他正准备删除锁，而且已经走到了条件判断的过程中，比如他已经拿到了当前这把锁确实是属于他自己的，正准备删除锁，但是此时他的锁到期了，那么此时线程2进来，但是线程1他会接着往后执行，当他卡顿结束后，他直接就会执行删除锁那行代码，相当于条件判断并没有起到作用，这就是删锁时的原子性问题，之所以有这个问题，是因为线程1的拿锁，比锁，删锁，实际上并不是原子性的，我们要防止刚才的情况发生</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/16/02a58e5979aeb079.png"></p>
+<h2 id="Lua脚本解决多条命令原子性问题"><a href="#Lua脚本解决多条命令原子性问题" class="headerlink" title="Lua脚本解决多条命令原子性问题"></a>Lua脚本解决多条命令原子性问题</h2><p>Redis提供了Lua脚本功能，在一个脚本中编写多条Redis命令，确保多条命令执行时的原子性。Lua是一种编程语言，它的基本语法大家可以参考网站：<a target="_blank" rel="noopener" href="https://www.runoob.com/lua/lua-tutorial.html%EF%BC%8C%E8%BF%99%E9%87%8C%E9%87%8D%E7%82%B9%E4%BB%8B%E7%BB%8DRedis%E6%8F%90%E4%BE%9B%E7%9A%84%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8lua%E5%8E%BB%E6%93%8D%E4%BD%9Credis%EF%BC%8C%E5%8F%88%E8%83%BD%E4%BF%9D%E8%AF%81%E4%BB%96%E7%9A%84%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%B0%B1%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E6%8B%BF%E9%94%81%E6%AF%94%E9%94%81%E5%88%A0%E9%94%81%E6%98%AF%E4%B8%80%E4%B8%AA%E5%8E%9F%E5%AD%90%E6%80%A7%E5%8A%A8%E4%BD%9C%E4%BA%86%EF%BC%8C%E4%BD%9C%E4%B8%BAJava%E7%A8%8B%E5%BA%8F%E5%91%98%E8%BF%99%E4%B8%80%E5%9D%97%E5%B9%B6%E4%B8%8D%E4%BD%9C%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E8%A6%81%E6%B1%82%E3%80%82">https://www.runoob.com/lua/lua-tutorial.html，这里重点介绍Redis提供的调用函数，我们可以使用lua去操作redis，又能保证他的原子性，这样就可以实现拿锁比锁删锁是一个原子性动作了，作为Java程序员这一块并不作一个简单要求。</a></p>
+<p>这里重点介绍Redis提供的调用函数，语法如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">redis.call(<span class="string">&#x27;命令名称&#x27;</span>, <span class="string">&#x27;key&#x27;</span>, <span class="string">&#x27;其它参数&#x27;</span>, ...)</span><br></pre></td></tr></table></figure>
+
+<p>例如，我们要执行set name jack，则脚本是这样：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"># 执行 set name jack</span><br><span class="line">redis.call(<span class="string">&#x27;set&#x27;</span>, <span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;jack&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>例如，我们要先执行set name Rose，再执行get name，则脚本如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"># 先执行 set name jack</span><br><span class="line">redis.call(<span class="string">&#x27;set&#x27;</span>, <span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Rose&#x27;</span>)</span><br><span class="line"># 再执行 get name</span><br><span class="line"><span class="keyword">local</span> name = redis.call(<span class="string">&#x27;get&#x27;</span>, <span class="string">&#x27;name&#x27;</span>)</span><br><span class="line"># 返回</span><br><span class="line"><span class="keyword">return</span> name</span><br></pre></td></tr></table></figure>
+
+<p>写好脚本以后，需要用Redis命令来调用脚本，调用脚本的常见命令如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">#调用脚本</span><br><span class="line">EVAL <span class="string">&quot;return redis.call(&#x27;set&#x27;,KEYS[1],ARGV[1])&quot;</span> <span class="number">1</span> name Rose</span><br></pre></td></tr></table></figure>
+
+<p>释放锁的业务流程是这样的</p>
+<p>​	1、获取锁中的线程标示</p>
+<p>​	2、判断是否与指定的标示（当前线程标示）一致</p>
+<p>​	3、如果一致则释放锁（删除）</p>
+<p>​	4、如果不一致则什么都不做</p>
+<p>如果用Lua脚本来表示则是这样的：</p>
+<p>最终我们操作redis的拿锁比锁删锁的lua脚本就会变成这样</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 这里的 KEYS[1] 就是锁的key，这里的ARGV[1] 就是当前线程标示</span></span><br><span class="line"><span class="comment">-- 获取锁中的标示，判断是否与当前线程标示一致</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;GET&#x27;</span>, KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>]) <span class="keyword">then</span></span><br><span class="line">  <span class="comment">-- 一致，则删除锁</span></span><br><span class="line">  <span class="keyword">return</span> redis.call(<span class="string">&#x27;DEL&#x27;</span>, KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">-- 不一致，则直接返回</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="利用Java代码调用Lua脚本改造分布式锁"><a href="#利用Java代码调用Lua脚本改造分布式锁" class="headerlink" title="利用Java代码调用Lua脚本改造分布式锁"></a>利用Java代码调用Lua脚本改造分布式锁</h2><p>lua脚本本身并不需要大家花费太多时间去研究，只需要知道如何调用，大致是什么意思即可，所以在笔记中并不会详细的去解释这些lua表达式的含义。</p>
+<p>我们的RedisTemplate中，可以利用execute方法去执行lua脚本，参数对应关系就如下图股</p>
+<p><img src="https://s3.bmp.ovh/imgs/2024/04/17/1fcd5be794a4deb9.png" alt="1fcd5be794a4deb9.png"></p>
+<p><strong>Java代码</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DefaultRedisScript&lt;Long&gt; UNLOCK_SCRIPT;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        UNLOCK_SCRIPT = <span class="keyword">new</span> <span class="title class_">DefaultRedisScript</span>&lt;&gt;();</span><br><span class="line">        UNLOCK_SCRIPT.setLocation(<span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(<span class="string">&quot;unlock.lua&quot;</span>));</span><br><span class="line">        UNLOCK_SCRIPT.setResultType(Long.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 调用lua脚本</span></span><br><span class="line">    stringRedisTemplate.execute(</span><br><span class="line">            UNLOCK_SCRIPT,</span><br><span class="line">            Collections.singletonList(KEY_PREFIX + name),</span><br><span class="line">            ID_PREFIX + Thread.currentThread().getId());</span><br><span class="line">&#125;</span><br><span class="line">经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了~</span><br></pre></td></tr></table></figure>
+
+<p>小总结：</p>
+<p>基于Redis的分布式锁实现思路：</p>
+<ul>
+<li>利用set nx ex获取锁，并设置过期时间，保存线程标示</li>
+<li>释放锁时先判断线程标示是否与自己一致，一致则删除锁<ul>
+<li>特性：<ul>
+<li>利用set nx满足互斥性</li>
+<li>利用set ex保证故障时锁依然能释放，避免死锁，提高安全性</li>
+<li>利用Redis集群保证高可用和高并发特性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>笔者总结：我们一路走来，利用添加过期时间，防止死锁问题的发生，但是有了过期时间之后，可能出现误删别人锁的问题，这个问题我们开始是利用删之前 通过拿锁，比锁，删锁这个逻辑来解决的，也就是删之前判断一下当前这把锁是否是属于自己的，但是现在还有原子性问题，也就是我们没法保证拿锁比锁删锁是一个原子性的动作，最后通过lua表达式来解决这个问题</p>
+<p>但是目前还剩下一个问题锁不住，什么是锁不住呢，你想一想，如果当过期时间到了之后，我们可以给他续期一下，比如续个30s，就好像是网吧上网， 网费到了之后，然后说，来，网管，再给我来10块的，是不是后边的问题都不会发生了，那么续期问题怎么解决呢，可以依赖于我们接下来要学习redission啦</p>
+<p><strong>测试逻辑：</strong></p>
+<p>第一个线程进来，得到了锁，手动删除锁，模拟锁超时了，其他线程会执行lua来抢锁，当第一天线程利用lua删除锁时，lua能保证他不能删除他的锁，第二个线程删除锁时，利用lua同样可以保证不会删除别人的锁，同时还能保证原子性。</p>
+<hr>
+<h1 id="Redisson分布式锁"><a href="#Redisson分布式锁" class="headerlink" title="Redisson分布式锁"></a>Redisson分布式锁</h1><h2 id="分布式锁-redission功能介绍"><a href="#分布式锁-redission功能介绍" class="headerlink" title="分布式锁-redission功能介绍"></a>分布式锁-redission功能介绍</h2><p>基于setnx实现的分布式锁存在下面的问题：</p>
+<p><strong>重入问题</strong>：重入问题是指 获得锁的线程可以再次进入到相同的锁的代码块中，可重入锁的意义在于防止死锁，比如HashTable这样的代码中，他的方法都是使用synchronized修饰的，假如他在一个方法内，调用另一个方法，那么此时如果是不可重入的，不就死锁了吗？所以可重入锁他的主要意义是防止死锁，我们的synchronized和Lock锁都是可重入的。</p>
+<p><strong>不可重试</strong>：是指目前的分布式只能尝试一次，我们认为合理的情况是：当线程在获得锁失败后，他应该能再次尝试获得锁。</p>
+<p><strong>超时释放：</strong>我们在加锁时增加了过期时间，这样的我们可以防止死锁，但是如果卡顿的时间超长，虽然我们采用了lua表达式防止删锁的时候，误删别人的锁，但是毕竟没有锁住，有安全隐患</p>
+<p><strong>主从一致性：</strong> 如果Redis提供了主从集群，当我们向集群写数据时，主机需要异步的将数据同步给从机，而万一在同步过去之前，主机宕机了，就会出现死锁问题。</p>
+<p><img src="https://vip.helloimg.com/i/2024/04/17/661ea7e45a3ed.png" alt="661ea7e45a3ed.png"></p>
+
                 
             </div>
             <hr/>
@@ -544,7 +660,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/09/%E4%BA%92%E6%96%A5%E9%94%81%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/09/%E4%BA%92%E6%96%A5%E9%94%81%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/10/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/10/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -586,12 +702,8 @@
                                     <span class="chip bg-color">Redis</span>
                                 </a>
                             
-                                <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
-                                    <span class="chip bg-color">缓存击穿</span>
-                                </a>
-                            
-                                <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
-                                    <span class="chip bg-color">互斥锁</span>
+                                <a href="/KendricW.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                                    <span class="chip bg-color">分布式锁</span>
                                 </a>
                             
                         </div>
@@ -635,9 +747,64 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/KendricW.github.io/2024/04/10/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/KendricW.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Redis分布式锁">
+                        
+                        <span class="card-title">Redis分布式锁</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                        <span class="chip bg-color">分布式锁</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/KendricW.github.io/2024/04/10/%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/">
                     <div class="card-image">
@@ -655,9 +822,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -687,67 +854,6 @@
                     
                     <a href="/KendricW.github.io/tags/%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F/">
                         <span class="chip bg-color">逻辑过期</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                Next&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/KendricW.github.io/2024/04/07/%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/KendricW.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="短信登录及状态更新">
-                        
-                        <span class="card-title">短信登录及状态更新</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-07
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
-                                    开发思路
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/KendricW.github.io/tags/Redis/">
-                        <span class="chip bg-color">Redis</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%99%BB%E5%BD%95/">
-                        <span class="chip bg-color">登录</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%9F%AD%E4%BF%A1/">
-                        <span class="chip bg-color">短信</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0/">
-                        <span class="chip bg-color">状态更新</span>
                     </a>
                     
                 </div>
