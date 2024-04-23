@@ -467,21 +467,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-04-17
+                    2024-04-21
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    3.3k
+                    3.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    12 Min
+                    14 Min
                 </div>
                 
 
@@ -634,6 +634,23 @@
 <p><strong>超时释放：</strong>我们在加锁时增加了过期时间，这样的我们可以防止死锁，但是如果卡顿的时间超长，虽然我们采用了lua表达式防止删锁的时候，误删别人的锁，但是毕竟没有锁住，有安全隐患</p>
 <p><strong>主从一致性：</strong> 如果Redis提供了主从集群，当我们向集群写数据时，主机需要异步的将数据同步给从机，而万一在同步过去之前，主机宕机了，就会出现死锁问题。</p>
 <p><img src="https://vip.helloimg.com/i/2024/04/17/661ea7e45a3ed.png" alt="661ea7e45a3ed.png"></p>
+<p>那么什么是Redission呢</p>
+<p>Redisson是一个在Redis的基础上实现的Java驻内存数据网格（In-Memory Data Grid）。它不仅提供了一系列的分布式的Java常用对象，还提供了许多分布式服务，其中就包含了各种分布式锁的实现。</p>
+<p>Redission提供了分布式锁的多种多样的功能</p>
+<p><img src="https://vip.helloimg.com/i/2024/04/17/661ea90476505.png"></p>
+<h2 id="Redission快速入门"><a href="#Redission快速入门" class="headerlink" title="Redission快速入门"></a>Redission快速入门</h2><p>引入依赖：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.redisson&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;redisson&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">3.13</span><span class="number">.6</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>配置Redisson客户端：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedissonConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RedissonClient <span class="title function_">redissonClient</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">// 配置</span></span><br><span class="line">        <span class="type">Config</span> <span class="variable">config</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Config</span>();</span><br><span class="line">        config.useSingleServer().setAddress(<span class="string">&quot;redis://192.168.150.101:6379&quot;</span>)</span><br><span class="line">            .setPassword(<span class="string">&quot;123321&quot;</span>);</span><br><span class="line">        <span class="comment">// 创建RedissonClient对象</span></span><br><span class="line">        <span class="keyword">return</span> Redisson.create(config);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如何使用Redission的分布式锁</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> RedissionClient redissonClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testRedisson</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">    <span class="comment">//获取锁(可重入)，指定锁的名称</span></span><br><span class="line">    <span class="type">RLock</span> <span class="variable">lock</span> <span class="operator">=</span> redissonClient.getLock(<span class="string">&quot;anyLock&quot;</span>);</span><br><span class="line">    <span class="comment">//尝试获取锁，参数分别是：获取锁的最大等待时间(期间会重试)，锁自动释放时间，时间单位</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> lock.tryLock(<span class="number">1</span>,<span class="number">10</span>,TimeUnit.SECONDS);</span><br><span class="line">    <span class="comment">//判断获取锁成功</span></span><br><span class="line">    <span class="keyword">if</span>(isLock)&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行业务&quot;</span>);          </span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            <span class="comment">//释放锁</span></span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 VoucherOrderServiceImpl</p>
+<p>注入RedissonClient</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> RedissonClient redissonClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.查询优惠券</span></span><br><span class="line">        <span class="type">SeckillVoucher</span> <span class="variable">voucher</span> <span class="operator">=</span> seckillVoucherService.getById(voucherId);</span><br><span class="line">        <span class="comment">// 2.判断秒杀是否开始</span></span><br><span class="line">        <span class="keyword">if</span> (voucher.getBeginTime().isAfter(LocalDateTime.now())) &#123;</span><br><span class="line">            <span class="comment">// 尚未开始</span></span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀尚未开始！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 3.判断秒杀是否已经结束</span></span><br><span class="line">        <span class="keyword">if</span> (voucher.getEndTime().isBefore(LocalDateTime.now())) &#123;</span><br><span class="line">            <span class="comment">// 尚未开始</span></span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀已经结束！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 4.判断库存是否充足</span></span><br><span class="line">        <span class="keyword">if</span> (voucher.getStock() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 库存不足</span></span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">        <span class="comment">//创建锁对象 这个代码不用了，因为我们现在要使用分布式锁</span></span><br><span class="line">        <span class="comment">//SimpleRedisLock lock = new SimpleRedisLock(&quot;order:&quot; + userId, stringRedisTemplate);</span></span><br><span class="line">        <span class="type">RLock</span> <span class="variable">lock</span> <span class="operator">=</span> redissonClient.getLock(<span class="string">&quot;lock:order:&quot;</span> + userId);</span><br><span class="line">        <span class="comment">//获取锁对象</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> lock.tryLock();</span><br><span class="line">       </span><br><span class="line">		<span class="comment">//加锁失败</span></span><br><span class="line">        <span class="keyword">if</span> (!isLock) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail(<span class="string">&quot;不允许重复下单&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//获取代理对象(事务)</span></span><br><span class="line">            <span class="type">IVoucherOrderService</span> <span class="variable">proxy</span> <span class="operator">=</span> (IVoucherOrderService) AopContext.currentProxy();</span><br><span class="line">            <span class="keyword">return</span> proxy.createVoucherOrder(voucherId);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//释放锁</span></span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
 
                 
             </div>
@@ -747,18 +764,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;Current
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/04/10/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                <a href="/KendricW.github.io/2024/04/19/%E6%AF%8F%E6%97%A5%E8%8B%B1%E8%AF%AD/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Redis分布式锁">
+                        <img src="/KendricW.github.io/medias/featureimages/11.jpg" class="responsive-img" alt="词汇量积累">
                         
-                        <span class="card-title">Redis分布式锁</span>
+                        <span class="card-title">词汇量积累</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -768,31 +784,26 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-19
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
-                                    开发思路
+                            <a href="/KendricW.github.io/categories/%E8%AF%AD%E8%A8%80/" class="post-category">
+                                    语言
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/KendricW.github.io/tags/Redis/">
-                        <span class="chip bg-color">Redis</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
-                        <span class="chip bg-color">分布式锁</span>
+                    <a href="/KendricW.github.io/tags/%E8%8B%B1%E8%AF%AD/">
+                        <span class="chip bg-color">英语</span>
                     </a>
                     
                 </div>
@@ -1056,7 +1067,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">39.1k</span>&nbsp;字
+                class="white-color">37.7k</span>&nbsp;字
             
             
             

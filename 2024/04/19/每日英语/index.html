@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="互斥锁解决缓存击穿问题, Kendrick_W&#39;s Blog">
+    <meta name="keywords" content="词汇量积累, Kendrick_W&#39;s Blog">
     <meta name="description" content="programming study">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>互斥锁解决缓存击穿问题 | Kendrick_W&#39;s Blog</title>
+    <title>词汇量积累 | Kendrick_W&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">互斥锁解决缓存击穿问题</h1>
+                    <h1 class="description center-align post-title">词汇量积累</h1>
                 </div>
             </div>
         </div>
@@ -431,16 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/KendricW.github.io/tags/Redis/">
-                                <span class="chip bg-color">Redis</span>
-                            </a>
-                        
-                            <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
-                                <span class="chip bg-color">缓存击穿</span>
-                            </a>
-                        
-                            <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
-                                <span class="chip bg-color">互斥锁</span>
+                            <a href="/KendricW.github.io/tags/%E8%8B%B1%E8%AF%AD/">
+                                <span class="chip bg-color">英语</span>
                             </a>
                         
                     </div>
@@ -451,8 +443,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
-                                开发思路
+                            <a href="/KendricW.github.io/categories/%E8%AF%AD%E8%A8%80/" class="post-category">
+                                语言
                             </a>
                         
                     </div>
@@ -464,28 +456,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-04-09
+                    2024-04-19
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2024-04-10
+                    2024-04-19
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    567
+                    221
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    2 Min
+                    1 Min
                 </div>
                 
 
@@ -508,17 +500,68 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="互斥锁解决缓存击穿问题"><a href="#互斥锁解决缓存击穿问题" class="headerlink" title="互斥锁解决缓存击穿问题"></a>互斥锁解决缓存击穿问题</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>相较于原来重缓存中查询不到数据后直接查询数据库而言，现在的方案是进行查询后，如果缓存没有查询到数据，则进行互斥锁的的获取，获取互斥锁后，判断是否获得了锁，如果没有获得到，则休眠，过一会儿再尝试查询，直到获取锁为止，才能进行查询。</p>
-<p>如果获取到了锁的线程，再去进行查询，查询后将数据写入redis，再释放锁，返回数据，利用互斥锁就能保证只有一个线程去执行操作数据库的逻辑，防止缓存击穿</p>
-<p><img src="https://s3.bmp.ovh/imgs/2024/04/10/1f54c2b678abb6e1.png"></p>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>核心思路就是利用redis的setnx方法来表示获取锁，该方法含义是redis中如果没有这个key，则插入成功，返回1，在stringRedisTemplate中返回true，  如果有这个key则插入失败，则返回0，在stringRedisTemplate返回false，我们可以通过true，或者是false，来表示是否有线程成功插入key，成功插入的key的线程我们认为他就是获得到锁的线程。</p>
-<p>操作锁的代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">tryLock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">Boolean</span> <span class="variable">flag</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(key, <span class="string">&quot;1&quot;</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> BooleanUtil.isTrue(flag);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">unlock</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    stringRedisTemplate.delete(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                <h1 id="2024年4月19日"><a href="#2024年4月19日" class="headerlink" title="2024年4月19日"></a>2024年4月19日</h1><h2 id="bull"><a href="#bull" class="headerlink" title="bull"></a>bull</h2><ul>
+<li>公牛</li>
+</ul>
+<h2 id="pot"><a href="#pot" class="headerlink" title="pot"></a>pot</h2><ul>
+<li>锅，罐，壶<ul>
+<li>hot pot 火锅</li>
+<li>keep the pot boling 谋生，维持生活</li>
+<li>a bit pot 大人物</li>
+<li>coffee pot 咖啡壶</li>
+<li>flower pot 花盆</li>
+</ul>
+</li>
+</ul>
+<h2 id="intimate"><a href="#intimate" class="headerlink" title="intimate"></a>intimate</h2><ul>
+<li>形容词 亲密的 密切的 详细的</li>
+<li>名词 知己 密友</li>
+<li>动词 暗示 宣布 通知<ul>
+<li>intimate relationship 亲密的关系</li>
+<li>intimate contact 亲密接触</li>
+<li>intimate distance 亲密距离</li>
+<li>intimate service 贴心服务</li>
+</ul>
+</li>
+</ul>
+<h2 id="chew"><a href="#chew" class="headerlink" title="chew"></a>chew</h2><ul>
+<li>动词 咀嚼 嚼碎</li>
+<li>名词 咀嚼<ul>
+<li>chew gum 口香糖</li>
+<li>chew up 嚼碎 毁坏 消耗</li>
+<li>chew over 仔细思考</li>
+</ul>
+</li>
+</ul>
+<h2 id="hatch"><a href="#hatch" class="headerlink" title="hatch"></a>hatch</h2><ul>
+<li>动词 孵蛋 破壳 策划 密谋</li>
+<li>名词 船舱盖<ul>
+<li>hatch out 孵化 策划</li>
+<li>hatch into 孵化成</li>
+<li>escape hatch 安全舱口</li>
+</ul>
+</li>
+</ul>
+<h2 id="disguise"><a href="#disguise" class="headerlink" title="disguise"></a>disguise</h2><ul>
+<li>名词 伪装物 伪装 伪装用具</li>
+<li>动词 伪装 掩盖 假扮<ul>
+<li>in disguise 伪装</li>
+</ul>
+</li>
+</ul>
+<h2 id="bore"><a href="#bore" class="headerlink" title="bore"></a>bore</h2><ul>
+<li><p>名词 讨厌的人 高潮 口径 孔</p>
+</li>
+<li><p>动词 使厌烦 稳步向前 钻空</p>
+<ul>
+<li>bore hole 钻空 炮眼</li>
+<li>bore out 证实 显出</li>
+<li>bore 孔径</li>
+<li>bore 全孔射击</li>
+</ul>
+</li>
+</ul>
 
-<p><strong>操作代码：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Shop <span class="title function_">queryWithMutex</span><span class="params">(Long id)</span>  &#123;</span><br><span class="line">       <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> CACHE_SHOP_KEY + id;</span><br><span class="line">       <span class="comment">// 1、从redis中查询商铺缓存</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">shopJson</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().get(<span class="string">&quot;key&quot;</span>);</span><br><span class="line">       <span class="comment">// 2、判断是否存在</span></span><br><span class="line">       <span class="keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;</span><br><span class="line">           <span class="comment">// 存在,直接返回</span></span><br><span class="line">           <span class="keyword">return</span> JSONUtil.toBean(shopJson, Shop.class);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//判断命中的值是否是空值</span></span><br><span class="line">       <span class="keyword">if</span> (shopJson != <span class="literal">null</span>) &#123;</span><br><span class="line">           <span class="comment">//返回一个错误信息</span></span><br><span class="line">           <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 4.实现缓存重构</span></span><br><span class="line">       <span class="comment">//4.1 获取互斥锁</span></span><br><span class="line">       <span class="type">String</span> <span class="variable">lockKey</span> <span class="operator">=</span> <span class="string">&quot;lock:shop:&quot;</span> + id;</span><br><span class="line">       <span class="type">Shop</span> <span class="variable">shop</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="type">boolean</span> <span class="variable">isLock</span> <span class="operator">=</span> tryLock(lockKey);</span><br><span class="line">           <span class="comment">// 4.2 判断否获取成功</span></span><br><span class="line">           <span class="keyword">if</span>(!isLock)&#123;</span><br><span class="line">               <span class="comment">//4.3 失败，则休眠重试</span></span><br><span class="line">               Thread.sleep(<span class="number">50</span>);</span><br><span class="line">               <span class="keyword">return</span> queryWithMutex(id);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//4.4 成功，根据id查询数据库</span></span><br><span class="line">            shop = getById(id);</span><br><span class="line">           <span class="comment">// 5.不存在，返回错误</span></span><br><span class="line">           <span class="keyword">if</span>(shop == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="comment">//将空值写入redis</span></span><br><span class="line">               stringRedisTemplate.opsForValue().set(key,<span class="string">&quot;&quot;</span>,CACHE_NULL_TTL,TimeUnit.MINUTES);</span><br><span class="line">               <span class="comment">//返回错误信息</span></span><br><span class="line">               <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//6.写入redis</span></span><br><span class="line">           stringRedisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(shop),CACHE_NULL_TTL,TimeUnit.MINUTES);</span><br><span class="line"></span><br><span class="line">       &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">finally</span> &#123;</span><br><span class="line">           <span class="comment">//7.释放互斥锁</span></span><br><span class="line">           unlock(lockKey);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> shop;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
                 
             </div>
             <hr/>
@@ -544,7 +587,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/09/%E4%BA%92%E6%96%A5%E9%94%81%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/09/%E4%BA%92%E6%96%A5%E9%94%81%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/</a>
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/19/%E6%AF%8F%E6%97%A5%E8%8B%B1%E8%AF%AD/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/04/19/%E6%AF%8F%E6%97%A5%E8%8B%B1%E8%AF%AD/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -582,16 +625,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/KendricW.github.io/tags/Redis/">
-                                    <span class="chip bg-color">Redis</span>
-                                </a>
-                            
-                                <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
-                                    <span class="chip bg-color">缓存击穿</span>
-                                </a>
-                            
-                                <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
-                                    <span class="chip bg-color">互斥锁</span>
+                                <a href="/KendricW.github.io/tags/%E8%8B%B1%E8%AF%AD/">
+                                    <span class="chip bg-color">英语</span>
                                 </a>
                             
                         </div>
@@ -639,13 +674,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/04/10/%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98/">
+                <a href="/KendricW.github.io/2024/04/23/Redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/23.jpg" class="responsive-img" alt="逻辑过期解决缓存击穿问题">
+                        <img src="/KendricW.github.io/medias/featureimages/18.jpg" class="responsive-img" alt="Redis消息队列">
                         
-                        <span class="card-title">逻辑过期解决缓存击穿问题</span>
+                        <span class="card-title">Redis消息队列</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -656,7 +691,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-23
                         </span>
                         <span class="publish-author">
                             
@@ -677,16 +712,8 @@
                         <span class="chip bg-color">Redis</span>
                     </a>
                     
-                    <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF/">
-                        <span class="chip bg-color">缓存击穿</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E4%BA%92%E6%96%A5%E9%94%81/">
-                        <span class="chip bg-color">互斥锁</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F/">
-                        <span class="chip bg-color">逻辑过期</span>
+                    <a href="/KendricW.github.io/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
                     </a>
                     
                 </div>
@@ -700,13 +727,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/KendricW.github.io/2024/04/07/%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/">
+                <a href="/KendricW.github.io/2024/04/10/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
                     <div class="card-image">
                         
                         
-                        <img src="/KendricW.github.io/medias/featureimages/21.jpg" class="responsive-img" alt="短信登录及状态更新">
+                        <img src="/KendricW.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="Redis分布式锁">
                         
-                        <span class="card-title">短信登录及状态更新</span>
+                        <span class="card-title">Redis分布式锁</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -717,7 +744,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
                             </span>
                         <span class="publish-author">
                             
@@ -738,16 +765,8 @@
                         <span class="chip bg-color">Redis</span>
                     </a>
                     
-                    <a href="/KendricW.github.io/tags/%E7%99%BB%E5%BD%95/">
-                        <span class="chip bg-color">登录</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%9F%AD%E4%BF%A1/">
-                        <span class="chip bg-color">短信</span>
-                    </a>
-                    
-                    <a href="/KendricW.github.io/tags/%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0/">
-                        <span class="chip bg-color">状态更新</span>
+                    <a href="/KendricW.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                        <span class="chip bg-color">分布式锁</span>
                     </a>
                     
                 </div>
