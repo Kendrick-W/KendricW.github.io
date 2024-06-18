@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>秒杀业务</title>
+      <link href="/KendricW.github.io/2024/06/18/%E7%A7%92%E6%9D%80/"/>
+      <url>/KendricW.github.io/2024/06/18/%E7%A7%92%E6%9D%80/</url>
+      
+        <content type="html"><![CDATA[<h1 id="秒杀业务"><a href="#秒杀业务" class="headerlink" title="秒杀业务"></a>秒杀业务</h1><h2 id="全局唯一-ID"><a href="#全局唯一-ID" class="headerlink" title="全局唯一 ID"></a>全局唯一 ID</h2><p>当用户抢购时，就会生成订单并保存到tb_voucher_order这张表中，而订单表如果使用数据库自增ID就存在一些问题：</p><ul><li>id的规律性太明显</li><li>受单表数据量的限制</li></ul><p>场景分析：如果我们的id具有太明显的规则，用户或者说商业对手很容易猜测出来我们的一些敏感信息，比如商城在一天时间内，卖出了多少单，这明显不合适。</p><p>场景分析二：随着我们商城规模越来越大，mysql的单表的容量不宜超过500W，数据量过大之后，我们要进行拆库拆表，但拆分表了之后，他们从逻辑上讲他们是同一张表，所以他们的id是不能一样的， 于是乎我们需要保证id的唯一性。</p><p><strong>全局ID生成器</strong>，是一种在分布式系统下用来生成全局唯一ID的工具，一般要满足下列特性：</p><ul><li>唯一性</li><li>高性能</li><li>安全性</li><li>递增性</li><li>高可用</li></ul><p>为了增加ID的安全性，我们可以不直接使用Redis自增的数值，而是拼接一些其它信息：</p><blockquote><p>符号位+时间戳（31bit）+序列号（32bit）</p></blockquote><p>ID的组成部分：符号位：1bit，永远为0</p><p>时间戳：31bit，以秒为单位，可以使用69年</p><p>序列号：32bit，秒内的计数器，支持每秒产生2^32个不同ID</p><h2 id="Redis-实现全局唯一-id"><a href="#Redis-实现全局唯一-id" class="headerlink" title="Redis 实现全局唯一 id"></a>Redis 实现全局唯一 id</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisIdWorker</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 开始时间戳</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">BEGIN_TIMESTAMP</span> <span class="operator">=</span> <span class="number">1640995200L</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 序列号的位数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">COUNT_BITS</span> <span class="operator">=</span> <span class="number">32</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> StringRedisTemplate stringRedisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RedisIdWorker</span><span class="params">(StringRedisTemplate stringRedisTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.stringRedisTemplate = stringRedisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">nextId</span><span class="params">(String keyPrefix)</span> &#123;</span><br><span class="line">        <span class="comment">// 1.生成时间戳</span></span><br><span class="line">        <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line">        <span class="type">long</span> <span class="variable">nowSecond</span> <span class="operator">=</span> now.toEpochSecond(ZoneOffset.UTC);</span><br><span class="line">        <span class="type">long</span> <span class="variable">timestamp</span> <span class="operator">=</span> nowSecond - BEGIN_TIMESTAMP;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.生成序列号</span></span><br><span class="line">        <span class="comment">// 2.1.获取当前日期，精确到天</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">date</span> <span class="operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy:MM:dd&quot;</span>));</span><br><span class="line">        <span class="comment">// 2.2.自增长</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">count</span> <span class="operator">=</span> stringRedisTemplate.opsForValue().increment(<span class="string">&quot;icr:&quot;</span> + keyPrefix + <span class="string">&quot;:&quot;</span> + date);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.拼接并返回</span></span><br><span class="line">        <span class="keyword">return</span> timestamp &lt;&lt; COUNT_BITS | count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="添加优惠卷"><a href="#添加优惠卷" class="headerlink" title="添加优惠卷"></a>添加优惠卷</h2><p>对于优惠力度比较大的优惠卷，就得限制数量，除了一些基本信息，还要具有库存，抢购时间，结束时间等字段</p><p><strong>新增秒杀卷代码：</strong></p><p><strong>VoucherController</strong></p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;seckill&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">addSeckillVoucher</span><span class="params">(<span class="meta">@RequestBody</span> Voucher voucher)</span> &#123;</span><br><span class="line">    voucherService.addSeckillVoucher(voucher);</span><br><span class="line">    <span class="keyword">return</span> Result.ok(voucher.getId());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><strong>VoucherServiceImpl</strong></p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addSeckillVoucher</span><span class="params">(Voucher voucher)</span> &#123;</span><br><span class="line">    <span class="comment">// 保存优惠券</span></span><br><span class="line">    save(voucher);</span><br><span class="line">    <span class="comment">// 保存秒杀信息</span></span><br><span class="line">    <span class="type">SeckillVoucher</span> <span class="variable">seckillVoucher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillVoucher</span>();</span><br><span class="line">    seckillVoucher.setVoucherId(voucher.getId());</span><br><span class="line">    seckillVoucher.setStock(voucher.getStock());</span><br><span class="line">    seckillVoucher.setBeginTime(voucher.getBeginTime());</span><br><span class="line">    seckillVoucher.setEndTime(voucher.getEndTime());</span><br><span class="line">    seckillVoucherService.save(seckillVoucher);</span><br><span class="line">    <span class="comment">// 保存秒杀库存到Redis中</span></span><br><span class="line">    stringRedisTemplate.opsForValue().set(SECKILL_STOCK_KEY + voucher.getId(), voucher.getStock().toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="实现秒杀下单"><a href="#实现秒杀下单" class="headerlink" title="实现秒杀下单"></a>实现秒杀下单</h2><p>下单时需要判断两点：</p><ul><li>秒杀是否开始或结束，如果尚未开始或已经结束则无法下单</li><li>库存是否充足，不足则无法下单</li></ul><p>下单核心逻辑分析：</p><p>当用户开始进行下单，我们应当去查询优惠卷信息，查询到优惠卷信息，判断是否满足秒杀条件</p><p>比如时间是否充足，如果时间充足，则进一步判断库存是否足够，如果两者都满足，则扣减库存，创建订单，然后返回订单id，如果有一个条件不满足则直接结束。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发思路 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Redis </tag>
+            
+            <tag> 秒杀 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis消息队列</title>
       <link href="/KendricW.github.io/2024/04/23/Redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
       <url>/KendricW.github.io/2024/04/23/Redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
@@ -23,31 +50,6 @@
             <tag> Redis </tag>
             
             <tag> 消息队列 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>词汇量积累</title>
-      <link href="/KendricW.github.io/2024/04/19/%E6%AF%8F%E6%97%A5%E8%8B%B1%E8%AF%AD/"/>
-      <url>/KendricW.github.io/2024/04/19/%E6%AF%8F%E6%97%A5%E8%8B%B1%E8%AF%AD/</url>
-      
-        <content type="html"><![CDATA[<h1 id="2024年4月19日"><a href="#2024年4月19日" class="headerlink" title="2024年4月19日"></a>2024年4月19日</h1><h2 id="bull"><a href="#bull" class="headerlink" title="bull"></a>bull</h2><ul><li>公牛</li></ul><h2 id="pot"><a href="#pot" class="headerlink" title="pot"></a>pot</h2><ul><li>锅，罐，壶<ul><li>hot pot 火锅</li><li>keep the pot boling 谋生，维持生活</li><li>a bit pot 大人物</li><li>coffee pot 咖啡壶</li><li>flower pot 花盆</li></ul></li></ul><h2 id="intimate"><a href="#intimate" class="headerlink" title="intimate"></a>intimate</h2><ul><li>形容词 亲密的 密切的 详细的</li><li>名词 知己 密友</li><li>动词 暗示 宣布 通知<ul><li>intimate relationship 亲密的关系</li><li>intimate contact 亲密接触</li><li>intimate distance 亲密距离</li><li>intimate service 贴心服务</li></ul></li></ul><h2 id="chew"><a href="#chew" class="headerlink" title="chew"></a>chew</h2><ul><li>动词 咀嚼 嚼碎</li><li>名词 咀嚼<ul><li>chew gum 口香糖</li><li>chew up 嚼碎 毁坏 消耗</li><li>chew over 仔细思考</li></ul></li></ul><h2 id="hatch"><a href="#hatch" class="headerlink" title="hatch"></a>hatch</h2><ul><li>动词 孵蛋 破壳 策划 密谋</li><li>名词 船舱盖<ul><li>hatch out 孵化 策划</li><li>hatch into 孵化成</li><li>escape hatch 安全舱口</li></ul></li></ul><h2 id="disguise"><a href="#disguise" class="headerlink" title="disguise"></a>disguise</h2><ul><li>名词 伪装物 伪装 伪装用具</li><li>动词 伪装 掩盖 假扮<ul><li>in disguise 伪装</li></ul></li></ul><h2 id="bore"><a href="#bore" class="headerlink" title="bore"></a>bore</h2><ul><li><p>名词 讨厌的人 高潮 口径 孔</p></li><li><p>动词 使厌烦 稳步向前 钻空</p><ul><li>bore hole 钻空 炮眼</li><li>bore out 证实 显出</li><li>bore 孔径</li><li>bore 全孔射击</li></ul></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> 语言 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 英语 </tag>
             
         </tags>
       
@@ -402,9 +404,9 @@
       
         <tags>
             
-            <tag> 面试 </tag>
-            
             <tag> 基础 </tag>
+            
+            <tag> 面试 </tag>
             
         </tags>
       

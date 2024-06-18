@@ -362,20 +362,20 @@
                 
                 
                 
-                <a href="/KendricW.github.io/categories/JAVA/" title="JAVA: 2">
+                <a href="/KendricW.github.io/categories/JUC/" title="JUC: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F9EBEA;">JAVA
-                        <span class="tag-length">2</span>
+                            style="background-color: #F9EBEA;">JUC
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/JUC/" title="JUC: 1">
+                <a href="/KendricW.github.io/categories/JAVA/" title="JAVA: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F5EEF8;">JUC
-                        <span class="tag-length">1</span>
+                            style="background-color: #F5EEF8;">JAVA
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -389,11 +389,11 @@
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" title="开发思路: 10">
+                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" title="开发思路: 11">
                     <span class="chip center-align waves-effect waves-light
                              chip-active "
                             style="background-color: #E8F8F5;">开发思路
-                        <span class="tag-length">10</span>
+                        <span class="tag-length">11</span>
                     </span>
                 </a>
                 
@@ -434,19 +434,10 @@
                 </a>
                 
                 
-                <a href="/KendricW.github.io/categories/%E8%AF%AD%E8%A8%80/" title="语言: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #A3E4D7;">语言
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
                 <a href="/KendricW.github.io/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="基础知识: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #85C1E9;">基础知识
+                            style="background-color: #A3E4D7;">基础知识
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -462,6 +453,61 @@
 
     <article id="articles" class="container articles">
         <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/KendricW.github.io/2024/06/18/%E7%A7%92%E6%9D%80/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/KendricW.github.io/medias/featureimages/5.jpg" class="responsive-img" alt="秒杀业务">
+                            
+                            <span class="card-title">秒杀业务</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                秒杀业务全局唯一 ID当用户抢购时，就会生成订单并保存到tb_voucher_order这张表中，而订单表如果使用数据库自增ID就存在一些问题：
+
+id的规律性太明显
+受单表数据量的限制
+
+场景分析：如果我们的id具有太明显的规则，用户或者
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-18
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/KendricW.github.io/tags/Redis/">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/KendricW.github.io/tags/%E7%A7%92%E6%9D%80/">
+                            <span class="chip bg-color">秒杀</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -945,65 +991,33 @@ Stream：比较完善的消息队列模型
                 </div>
             </div>
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/KendricW.github.io/2024/03/13/%E7%99%BB%E5%BD%95%E4%B8%8E%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%B7%AF/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/KendricW.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="登录与校验的思路">
-                            
-                            <span class="card-title">登录与校验的思路</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                登录校验思路DTO：DTO是一种设计模式，它主要用来封装需要在网络间传输的数据或者在应用程序的不同层级间进行传递的对象。DTO通常包含了服务层操作所需的全部或部分数据
-VO：用于封装用户界面展示所需的数据，以及接收用户输入的数据。
-Cont
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-13
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
-                                    开发思路
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/KendricW.github.io/tags/java/">
-                            <span class="chip bg-color">java</span>
-                        </a>
-                        
-                        <a href="/KendricW.github.io/tags/%E7%99%BB%E5%BD%95/">
-                            <span class="chip bg-color">登录</span>
-                        </a>
-                        
-                        <a href="/KendricW.github.io/tags/%E6%A0%A1%E9%AA%8C/">
-                            <span class="chip bg-color">校验</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 </main>
+
+
+<div class="container paging">
+    <div class="row">
+        <div class="col s6 m4 l4">
+            
+            <a class="left btn-floating btn-large disabled">
+                <i class="fas fa-angle-left"></i>
+            </a>
+            
+        </div>
+        <div class="page-info col m4 l4 hide-on-small-only">
+            <div class="center-align b-text-gray">1 / 2</div>
+        </div>
+        <div class="col s6 m4 l4">
+            
+            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/page/2/"
+               class="right btn-floating btn-large waves-effect waves-light bg-color">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            
+        </div>
+    </div>
+</div>
 
 
 
@@ -1077,7 +1091,7 @@ Cont
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">37.7k</span>&nbsp;字
+                class="white-color">38.3k</span>&nbsp;字
             
             
             
