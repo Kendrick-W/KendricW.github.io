@@ -1,0 +1,1342 @@
+<!DOCTYPE HTML>
+<html lang="zh-Hans">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="缓存和数据库一致性问题, Kendrick_W&#39;s Blog">
+    <meta name="description" content="programming study">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>缓存和数据库一致性问题 | Kendrick_W&#39;s Blog</title>
+    <link rel="icon" type="image/png" href="/KendricW.github.io/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/css/my.css">
+
+    <script src="/KendricW.github.io/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/KendricW.github.io/" class="waves-effect waves-light">
+                    
+                    <img src="/KendricW.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Kendrick_W&#39;s Blog</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/KendricW.github.io/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/KendricW.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Kendrick_W&#39;s Blog</div>
+        <div class="logo-desc">
+            
+            programming study
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/KendricW.github.io/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Kendrick-W" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Kendrick-W" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/KendricW.github.io/medias/featureimages/7.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">缓存和数据库一致性问题</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/KendricW.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/KendricW.github.io/tags/Redis/">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                            <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98/">
+                                <span class="chip bg-color">缓存</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                开发思路
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2024-06-25
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
+                    2024-06-24
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    4.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    15 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/KendricW.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="引入缓存提高性能"><a href="#引入缓存提高性能" class="headerlink" title="引入缓存提高性能"></a>引入缓存提高性能</h1><p>业务起步阶段，流量非常小，无论是读请求还是写请求，直接操作数据库即可</p>
+<p>项目架构模型是这样子的：</p>
+<p><img src="https://s2.loli.net/2024/06/23/c2DqxK7ayJkr6w1.jpg"></p>
+<p>随着业务量的增长，项目的请求量越来越大，这时如果每次都从数据库中读数据，那肯定会有性能问题。</p>
+<p>这个阶段通常的做法是，引入&#x3D;&#x3D;缓存&#x3D;&#x3D;来提高读性能，架构模型就变成了这样：</p>
+<p><img src="https://s2.loli.net/2024/06/23/DM9K6ubXkjW5tY8.jpg"></p>
+<p>缓存中间件的首选，肯定是 Redis，不仅性能高，还提供了很多友好的数据类型，可以很好地满足我们的业务需求。</p>
+<p>但是引入缓存之后，我们会面临一个问题：之前数据只存在数据库中，现在要放到缓存中读取，具体要怎么存呢？</p>
+<p>最简单直接的方案是「全量数据刷到缓存中」：</p>
+<ul>
+<li>数据库的数据，全量刷入缓存（不设置失效时间）</li>
+<li>写请求只更新数据库，不更新缓存</li>
+<li>启动一个定时任务，定时把数据库的数据，更新到缓存中</li>
+</ul>
+<p><img src="https://s2.loli.net/2024/06/23/AaxgSFD7u5P6lWb.jpg"></p>
+<p>优点：</p>
+<p>​	所有请求都可以直接命中缓存，不需要再查数据库，性能非常高</p>
+<p>缺点：</p>
+<ul>
+<li><p>缓存利用率低</p>
+<p>不经常访问的数据，还留在缓存中</p>
+</li>
+<li><p>数据不一致</p>
+<p>因为是定时刷新缓存，缓存和数据库存在不一致（取决于定时任务的执行频率）</p>
+</li>
+</ul>
+<p>所以，这种方案适合业务体量小，且对数据一致性要求不高的业务场景</p>
+<p>那么我们思考一下，当我们的业务体量很大的时候，该如何解决上述的两个问题呢？</p>
+<h1 id="缓存利用率和一致性的问题"><a href="#缓存利用率和一致性的问题" class="headerlink" title="缓存利用率和一致性的问题"></a>缓存利用率和一致性的问题</h1><p>先来针对第一个问题，如何提高缓存利用率？</p>
+<p>想要缓存利用率最大化，我们很容易想到的方案是，缓存中只保留最近访问的热数据</p>
+<p>优化方案：</p>
+<ul>
+<li>写请求依旧只写数据库</li>
+<li>读请求先读缓存，如果缓存不存在，则从数据库读取，并重建缓存</li>
+<li>同时，写入缓存中的数据，都设置失效时间</li>
+</ul>
+<p><img src="https://s2.loli.net/2024/06/23/gFHxliAPz9nuVtw.jpg"></p>
+<p>这样一来，缓存中不经常访问的数据，随着时间的推移，都会逐渐过期淘汰掉，最终缓存中保留的，都是经常被访问的热数据，缓存利用率得到最大化</p>
+<p>返观关于数据一致性的问题</p>
+<p>想要保证缓存和数据库实时一致，那就不能再用定时任务刷新缓存了。</p>
+<p>所以当数据发生更新时，我们不仅要操作数据库，还要一并操作缓存。具体就是，修改一条数据的时候，不仅要更新数据库，还要连带着缓存一起更新。</p>
+<p>细心的你又会想到，两个操作的先后问题，那应对的方案就有两种：</p>
+<ol>
+<li>先更新缓存，后更新数据库</li>
+<li>先更新数据库，后更新缓存</li>
+</ol>
+<p>暂且先不考虑并发问题，正常情况下，无论谁先谁后，都可以让两者保持一致，但是现在我们需要考虑其中的异常情况。</p>
+<p>因为操作分为两步，那么很有可以存在<code>一步成功，一步失败</code>的情况发生</p>
+<p>接下来我们来一起思考，逐步分析</p>
+<h2 id="先更新缓存，后更新数据库"><a href="#先更新缓存，后更新数据库" class="headerlink" title="先更新缓存，后更新数据库"></a>先更新缓存，后更新数据库</h2><p>如果缓存更新成功了，但数据库更新失败，那么此时缓存中是最新值，数据库的依然是旧值</p>
+<p>虽然此时读请求是可以命中缓存，拿到正确的值，但是，一旦缓存过期失效，就会从数据库中读到旧值，重建的缓存也是这个旧值</p>
+<p>用户就会发现之前修改成功的值又变回去了，对业务造成了影响</p>
+<h2 id="先更新数据库，后更新缓存"><a href="#先更新数据库，后更新缓存" class="headerlink" title="先更新数据库，后更新缓存"></a>先更新数据库，后更新缓存</h2><p>如果数据库更新成功了，但缓存更新失败了，那么此时数据库中的是最新值，缓存中的是旧值</p>
+<p>之后的读请求读到的都是就数据，只有当缓存失效后，重建缓存，才能从数据库中得到正确的值</p>
+<p>这时用户会发现，自己刚刚修改了数据，但是却看不到变更，一段时间过后，数据才变更过来，业务也会有影响</p>
+<p>由此可见，无论谁先谁后，但凡后者发生异常，就会对业务造成影响。那么如何解决呢？</p>
+<p>我们继续分析，除了操作失败问题，还有什么场景会影响数据一致性？</p>
+<blockquote>
+<p>提示：并发问题</p>
+</blockquote>
+<h1 id="并发引发的一致性问题"><a href="#并发引发的一致性问题" class="headerlink" title="并发引发的一致性问题"></a>并发引发的一致性问题</h1><p>假设我们采用 <strong>先更新数据库，再更新缓存</strong> 的方案，并且两步都可以成功执行的前提下，如果存在并发，情况会是怎样？</p>
+<p>有线程 A 和线程 B 两个线程，需要更新同一条数据，会发生这样的场景：</p>
+<ol>
+<li>线程 A 更新数据库（X &#x3D; 1）</li>
+<li>线程 B 更新数据库（X &#x3D; 2）</li>
+<li>线程 B 更新缓存（X &#x3D; 2）</li>
+<li>线程 A 更新缓存（X &#x3D; 1）</li>
+</ol>
+<p>最终 X 的值在缓存中是 1，在数据库中是 2，不一致</p>
+<p>也就是说，A 虽然先于 B 发生，但 B 操作数据库和缓存的时间，却要比 A 的时间短，执行时序发生错乱，最终这条数据结果是不符合预期的</p>
+<blockquote>
+<p>同样地，采用「先更新缓存，再更新数据库」的方案，也会有类似问题，这里不再详述。</p>
+</blockquote>
+<p>除此之外，我们从缓存利用率的角度来评估这个方案，也是不推荐的</p>
+<p>这是因为每次数据发生变更，都无脑更新缓存，但是缓存中的数据不一定会被马上读取，这就会导致缓存中可能存放了很多不经常访问的数据，浪费缓存资源</p>
+<p>而且很多情况下，写到缓存中的值，并不是于数据库的值一一对应的，很有可能是先查询数据库，再经过一系列计算得出来的一个值，才把这个值写到缓存中。</p>
+<p>由此可见，这种更新数据库+更新缓存的方案，不仅缓存利用率不高，还会造成机器性能浪费</p>
+<p>所以此时我们需要考虑另外的方案：删除缓存</p>
+<h1 id="删除缓存可以保证一致性吗？"><a href="#删除缓存可以保证一致性吗？" class="headerlink" title="删除缓存可以保证一致性吗？"></a>删除缓存可以保证一致性吗？</h1><p>删除缓存对应的方案也有两种：</p>
+<ol>
+<li>先删除缓存，后更新数据库</li>
+<li>先更新数据库，后删除缓存</li>
+</ol>
+<p>经理前面的分析我们已经得知，但凡后者操作失败，都会导致数据不一致</p>
+<p>这里我们重点来看并发问题</p>
+<h2 id="先删除缓存，后更新数据库"><a href="#先删除缓存，后更新数据库" class="headerlink" title="先删除缓存，后更新数据库"></a>先删除缓存，后更新数据库</h2><p>如果有两个线程要并发读写数据，可能会发生以下场景：</p>
+<ol>
+<li>线程 A 要更新 X &#x3D; 2（原值 X &#x3D; 1）</li>
+<li>线程 A 先删除缓存</li>
+<li>线程 B 读缓存，发现不存在，从数据库中读取到旧值（X &#x3D; 1）</li>
+<li>线程 A 将新值写入数据库（X &#x3D; 2）</li>
+<li>线程 B 将旧值写入缓存（X &#x3D; 1）</li>
+</ol>
+<p>最终 X 的值在缓存中是旧值，在数据库中的是新值，发生不一致</p>
+<p>可见，先删除缓存，后更新数据库，当发生读+写并发时，还是存在数据不一致的情况</p>
+<h2 id="先更新数据库，后删除缓存"><a href="#先更新数据库，后删除缓存" class="headerlink" title="先更新数据库，后删除缓存"></a>先更新数据库，后删除缓存</h2><p>依旧是两个线程并发读写数据：</p>
+<ol>
+<li>缓存中 X 不存在（数据库 X &#x3D; 1）</li>
+<li>线程 A 读取数据库，得到旧值（X &#x3D; 1）</li>
+<li>线程 B 更新数据库（X &#x3D; 2)</li>
+<li>线程 B 删除缓存</li>
+<li>线程 A 将旧值写入缓存（X &#x3D; 1）</li>
+</ol>
+<p>最终 X 的值在缓存中是 1（旧值），在数据库中是 2（新值），也发生不一致。</p>
+<p>这种情况理论上来说是可能发生的，但是实际上概率极低</p>
+<p>因为它必须满足三个条件：</p>
+<ol>
+<li>缓存刚好失效</li>
+<li>读请求+写请求并发</li>
+<li>更新数据库+删除缓存的时间要比读数据库+写缓存时间短</li>
+</ol>
+<p>条件 3 发生的概率是非常低的</p>
+<p>因为数据库一般都会加锁，所以写数据库的时间一般比读数据库的时间长</p>
+<p>这么来看，先更新数据库+再删除缓存的方案，是可以保证数据一致性的</p>
+<p>解决了并发问题，我们继续来看之前提到的问题，第二部执行失败导致数据库不一致的问题</p>
+<h1 id="如何保证两步都执行成功？"><a href="#如何保证两步都执行成功？" class="headerlink" title="如何保证两步都执行成功？"></a>如何保证两步都执行成功？</h1><p>前面提到过，无论是哪种方案，只要第二步失败，就会导致数据库和缓存的不一致</p>
+<p>&#x3D;&#x3D;保证第二部成功执行，就是解决问题的关键&#x3D;&#x3D;</p>
+<p>最简单的解决方法：&#x3D;&#x3D;重试&#x3D;&#x3D;</p>
+<p>无论是操作缓存，还是先操作数据库，但凡后者执行失败了，我们就可以发起重试，尽可能地补偿</p>
+<p>但并不是无脑重试，还需要考虑：</p>
+<ul>
+<li>立即重试很大概率还会失败</li>
+<li>重试次数设置多少合理</li>
+<li>重试会一直占用这个线程资源，无法服务其他客户端请求</li>
+</ul>
+<p>更加完善的方案：&#x3D;&#x3D;异步重试&#x3D;&#x3D;</p>
+<p>其实就是把重试请求写到消息队列中，然后由专门的消费者来重试，直到成功</p>
+<p>或者更加直接的做法，为了避免第二步执行失败，我们可以把操作缓存这一步，直到放到消息队列中，由消费者来操作缓存</p>
+<p>到这里你可能会问，写消息队列也有可能会失败啊？而且，引入消息队列，这又增加了更多的维护成本，这样做值得吗？</p>
+<p>这个问题很好，但我们思考这样一个问题：如果在执行失败的线程中一直重试，还没等执行成功，此时如果项目「重启」了，那这次重试请求也就「丢失」了，那这条数据就一直不一致了。</p>
+<p>所以，这里我们必须把重试或第二步操作放到另一个「服务」中，这个服务用「消息队列」最为合适。这是因为消息队列的特性，正好符合我们的需求：</p>
+<ul>
+<li><strong>消息队列保证可靠性</strong>：写到队列中的消息，成功消费之前不会丢失（重启项目也不担心）</li>
+<li><strong>消息队列保证消息成功投递</strong>：下游从队列拉取消息，成功消费后才会删除消息，否则还会继续投递消息给消费者（符合我们重试的场景）</li>
+</ul>
+<p>至于写队列失败和消息队列的维护成本问题：</p>
+<ul>
+<li><strong>写队列失败</strong>：操作缓存和写消息队列，「同时失败」的概率其实是很小的</li>
+<li><strong>维护成本</strong>：我们项目中一般都会用到消息队列，维护成本并没有新增很多</li>
+</ul>
+<p>此时的架构模型：</p>
+<p><img src="https://s2.loli.net/2024/06/24/H7xfDJV8tcmiRu3.jpg"></p>
+<p>如果确实不想应用中去写消息队列，是否有更简单的方案，此时又怎么保证一致性呢？</p>
+<p>最近几年比较流行的解决方案：&#x3D;&#x3D;订阅数据库变更日志，再操作缓存&#x3D;&#x3D;</p>
+<p>我们的业务应用在修改数据时，只需修改数据库，无需操作缓存</p>
+<p>那什么时候操作缓存呢？这就和数据库的变更日志有关</p>
+<p>当一条数据发生修改时，就会产生一条变更日志（Binlog）我们可以订阅这个日志，拿到具体操作的数据，然后再根据这条数据，去删除对应的缓存</p>
+<p><img src="https://s2.loli.net/2024/06/24/Kq3DoxQwPgH2E9b.jpg"></p>
+<p>订阅日志变更的日志，目前也有了比较成熟的开源中间件，例如阿里的 canal，使用这种方案的有点在于：</p>
+<ul>
+<li>无需考虑写消息队列失败情况：只要写 Mysql 成功，Binlog 肯定会有日志</li>
+<li>自动投递到下有队列：canal 自动把Binlog 投递给下有的消息队列</li>
+</ul>
+<p>当然，与此同时，我们需要投入精力去维护 canal 的高可用和稳定性</p>
+<blockquote>
+<p>如果你有留意观察很多数据库的特性，就会发现其实很多数据库都逐渐开始提供「订阅变更日志」的功能了，相信不远的将来，我们就不用通过中间件来拉取日志，自己写程序就可以订阅变更日志了，这样可以进一步简化流程。</p>
+</blockquote>
+<p>至此，我们可以得出结论，想要保证数据库和缓存一致性，<strong>推荐采用「先更新数据库，再删除缓存」方案，并配合「消息队列」或「订阅变更日志」的方式来做</strong>。</p>
+<h1 id="主从库延迟和延迟双删问题"><a href="#主从库延迟和延迟双删问题" class="headerlink" title="主从库延迟和延迟双删问题"></a>主从库延迟和延迟双删问题</h1><p>到这里，还有两个问题，我们没有重点分析过。</p>
+<p><strong>第一个问题</strong>，还记得前面讲到的先删除缓存，再更新数据库方案，导致不一致的场景么？</p>
+<p>2 个线程要并发「读写」数据，可能会发生以下场景：</p>
+<ol>
+<li>线程 A 要更新 X &#x3D; 2（原值 X &#x3D; 1）</li>
+<li>线程 A 先删除缓存</li>
+<li>线程 B 读缓存，发现不存在，从数据库中读取到旧值（X &#x3D; 1）</li>
+<li>线程 A 将新值写入数据库（X &#x3D; 2）</li>
+<li>线程 B 将旧值写入缓存（X &#x3D; 1）</li>
+</ol>
+<p>最终 X 的值在缓存中是 1（旧值），在数据库中是 2（新值），发生不一致。</p>
+<p><strong>第二个问题</strong>：是关于「读写分离 + 主从复制延迟」情况下，缓存和数据库一致性的问题。</p>
+<p>在「先更新数据库，再删除缓存」方案下，「读写分离 + 主从库延迟」其实也会导致不一致：</p>
+<ol>
+<li>线程 A 更新主库 X &#x3D; 2（原值 X &#x3D; 1）</li>
+<li>线程 A 删除缓存</li>
+<li>线程 B 查询缓存，没有命中，查询「从库」得到旧值（从库 X &#x3D; 1）</li>
+<li>从库「同步」完成（主从库 X &#x3D; 2）</li>
+<li>线程 B 将「旧值」写入缓存（X &#x3D; 1）</li>
+</ol>
+<p>最终 X 的值在缓存中是 1（旧值），在主从库中是 2（新值），也发生不一致。</p>
+<p>以上两种情况，缓存都被回种了旧值</p>
+<p>最有效的办法就是 把缓存删掉</p>
+<p>但是，不能立即删除，而是需要延迟删，这就是业界给出的方案：缓存延迟双删策略</p>
+<p>按照延时双删策略，这两个问题的解决方案</p>
+<p><strong>解决第一个问题</strong>：在线程 A 删除缓存、更新完数据库之后，先休眠一会，再删除一次缓存</p>
+<p><strong>解决第二个问题</strong>：线程 A 可以生成一条延时信息，写到消息队列中，消费者延时删除缓存</p>
+<p>两个方案的目的都是把缓存清掉，这样一来，下次就可以重数据库读取懂啊最新值，写入缓存</p>
+<p>但问题来了，延迟删除缓存，延迟时间到底设置要多久？</p>
+<ul>
+<li>问题1：延迟时间要大于「主从复制」的延迟时间</li>
+<li>问题2：延迟时间要大于线程 B 读取数据库 + 写入缓存的时间</li>
+</ul>
+<p>但是，<strong>这个时间在分布式和高并发场景下，其实是很难评估的</strong>。</p>
+<p>很多时候，我们都是凭借经验大致估算这个延迟时间，例如延迟 1-5s，只能尽可能地降低不一致的概率。</p>
+<p>采用这种方案，也只是尽可能保证一致性而已，极端情况下，还是有可能发生不一致。</p>
+<p>所以实际使用中，我还是建议你采用「先更新数据库，再删除缓存」的方案，同时，要尽可能地保证「主从复制」不要有太大延迟，降低出问题的概率。</p>
+<h1 id="可以做到强一致吗？"><a href="#可以做到强一致吗？" class="headerlink" title="可以做到强一致吗？"></a>可以做到强一致吗？</h1><p>这些方案还是不够完美，想做到真正意义上的强一致，很难</p>
+<p>最常见的方案是 2PC、3PC、Paxos、Raft 这类一致性协议，但它们的性能往往比较差，而且这些方案也比较复杂，还要考虑各种容错问题。</p>
+<p>相反，我们可以换一个角度思考，我们引入缓存的目的是什么？</p>
+<p>性能</p>
+<p>一旦我们决定使用缓存，那必然要面临一致性问题。性能和一致性就像天平的两端，无法做到都满足要求。</p>
+<p>而且，就拿我们前面讲到的方案来说，当操作数据库和缓存完成之前，只要有其它请求可以进来，都有可能查到「中间状态」的数据。</p>
+<p>所以如果非要追求强一致，那必须要求所有更新操作完成之前期间，不能有「任何请求」进来。</p>
+<p>虽然我们可以通过加「分布锁」的方式来实现，但我们要付出的代价，很可能会超过引入缓存带来的性能提升。</p>
+<p>所以，既然决定使用缓存，就必须容忍「一致性」问题，我们只能尽可能地去降低问题出现的概率。</p>
+<p>同时我们也要知道，缓存都是有「失效时间」的，就算在这期间存在短期不一致，我们依旧有失效时间来兜底，这样也能达到最终一致。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        Author:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/KendricW.github.io/about" rel="external nofollow noreferrer">Kendrick_W</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        Link:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/06/25/%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">https://kendrick-w.github.io/KendricW.github.io/KendricW.github.io/2024/06/25/%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        Reprint policy:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    All articles in this blog are used except for special statements
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    reprint polocy. If reproduced, please indicate source
+                    <a href="/KendricW.github.io/about" target="_blank">Kendrick_W</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>Copied successfully, please follow the reprint policy of this article</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">more</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/KendricW.github.io/tags/Redis/">
+                                    <span class="chip bg-color">Redis</span>
+                                </a>
+                            
+                                <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98/">
+                                    <span class="chip bg-color">缓存</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/KendricW.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/KendricW.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/KendricW.github.io/2024/06/25/%E7%BC%93%E5%AD%98%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/KendricW.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="缓存和数据库一致性问题">
+                        
+                        <span class="card-title">缓存和数据库一致性问题</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" class="post-category">
+                                    开发思路
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/KendricW.github.io/tags/%E7%BC%93%E5%AD%98/">
+                        <span class="chip bg-color">缓存</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/KendricW.github.io/2024/06/25/%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB%E5%92%8C%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/KendricW.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="读写分离和分库分表">
+                        
+                        <span class="card-title">读写分离和分库分表</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/KendricW.github.io/categories/Mysql/" class="post-category">
+                                    Mysql
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/KendricW.github.io/tags/Mysql/">
+                        <span class="chip bg-color">Mysql</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/KendricW.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/KendricW.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/KendricW.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/KendricW.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/KendricW.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/KendricW.github.io/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/KendricW.github.io/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024</span>
+            
+            <span id="year">2024</span>
+            <a href="/KendricW.github.io/about" target="_blank">Kendrick_W</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">50.8k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Kendrick-W" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:18826836701@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1278058359" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1278058359" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/KendricW.github.io/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/KendricW.github.io/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/KendricW.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="/KendricW.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/KendricW.github.io/libs/aos/aos.js"></script>
+    <script src="/KendricW.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/KendricW.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/KendricW.github.io/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/KendricW.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/KendricW.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
